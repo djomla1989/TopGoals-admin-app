@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands\SportsImport;
 
-use App\Gender;
-use App\Models\Country;
 use App\Models\Sport;
 use App\Models\Tournament;
 use App\Models\TournamentSeason;

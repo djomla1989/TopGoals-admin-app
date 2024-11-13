@@ -2,20 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Gender;
+use App\Enums\TournamentTypeEnum;
 use App\Filament\Resources\TournamentResource\Pages;
 use App\Filament\Resources\TournamentResource\RelationManagers;
-use App\Gender;
-use App\Models\BaseModel;
 use App\Models\Country;
 use App\Models\Sport;
 use App\Models\Tournament;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
 
 class TournamentResource extends Resource
@@ -52,6 +49,10 @@ class TournamentResource extends Resource
                     }),
                 Tables\Columns\ImageColumn::make('country.image')->label('')->width(40)->circular(),
                 Tables\Columns\TextColumn::make('country.name')->label('Country')->sortable()->searchable(),
+                Tables\Columns\TextColumn::make('type')
+                    ->label('Type')
+                    ->width(30)
+                    ->badge()
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('sport_id')
@@ -93,6 +94,11 @@ class TournamentResource extends Resource
                     ->searchable()
                     ->multiple()
                     ->label('Gender'),
+                Tables\Filters\SelectFilter::make('type')
+                    ->options(fn() => collect(TournamentTypeEnum::cases())->mapWithKeys(fn($gender) => [$gender->value => $gender->label()]))
+                    ->searchable()
+                    ->multiple()
+                    ->label('League Type'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

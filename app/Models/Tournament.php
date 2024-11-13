@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int sport_id
  * @property int country_id
  * @property string image
+ * @property string type
  */
 class Tournament extends BaseModel
 {
@@ -26,6 +27,7 @@ class Tournament extends BaseModel
         'description',
         'image',
         'gender',
+        'type'
     ];
 
     public function sport(): BelongsTo

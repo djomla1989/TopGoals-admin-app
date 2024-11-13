@@ -1,6 +1,5 @@
 <?php
 
-use App\Gender;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,11 +16,12 @@ return new class extends Migration
             $table->integer('import_id')->nullable();
             $table->string('name');
             $table->string('slug');
-            $table->enum('gender', array_column(['M', 'F', 'MIX'], 'value'))->default('M');
+            $table->enum('gender', ['M', 'F', 'MIX'])->default('M');
             $table->foreignId('sport_id')->constrained();
             $table->foreignId('country_id')->constrained();
             $table->text('description')->nullable();
             $table->string('image')->nullable();
+            $table->enum('type', ['league', 'knockout', 'tournament', 'cup', 'super-cup', 'friendly', 'qualifying_cup', 'qualifying_tournament'])->default('league');
             $table->timestamps();
         });
     }
