@@ -6,6 +6,7 @@ namespace App\Models;
  * @property string code
  * @property string description
  * @property string image
+ * @property int import_id
  */
 class Country extends BaseModel
 {
@@ -14,5 +15,6 @@ class Country extends BaseModel
         'code',
         'description',
         'image',
+
     ];
 }

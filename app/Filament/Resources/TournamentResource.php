@@ -47,6 +47,10 @@ class TournamentResource extends Resource
                         'MIX' => 'primary',
                         default => 'success',
                     }),
+                Tables\Columns\TextColumn::make('seasons_count')
+                    ->label('Seasons')
+                    ->counts('seasons')
+                    ->sortable(),
                 Tables\Columns\ImageColumn::make('country.image')->label('')->width(40)->circular(),
                 Tables\Columns\TextColumn::make('country.name')->label('Country')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('type')

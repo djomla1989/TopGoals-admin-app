@@ -32,7 +32,7 @@ class ImportTournaments extends Command
     public function handle()
     {
         $conn = DB::connection('mongodb');
-        $tournamentList = $conn->table('uniqueTournaments')->orderBy('name')->get();
+        $tournamentList = $conn->table('uniqueTournaments')->get();
 
         $sport = Sport::where('name', 'Football')->first();
         if (!$sport) {
