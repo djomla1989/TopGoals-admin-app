@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum TournamentTypeEnum : string
+enum TournamentTypeEnum: string
 {
     case LEAGUE = 'league';
     case KNOCKOUT = 'knockout';
@@ -15,7 +15,7 @@ enum TournamentTypeEnum : string
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::LEAGUE => 'League',
             self::KNOCKOUT => 'Knockout',
             self::TOURNAMENT => 'Tournament',

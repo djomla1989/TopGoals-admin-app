@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 /**
  * @property int id
  * @property string name
@@ -21,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string image
  * @property string primary_color
  */
-class Team extends Model
+class Team extends BaseModel
 {
     protected $fillable = [
         'name',
@@ -35,7 +34,7 @@ class Team extends Model
         'is_national',
         'gender',
         'primary_color',
-        'image'
+        'image',
     ];
 
     public function sport(): BelongsTo
@@ -52,5 +51,4 @@ class Team extends Model
     {
         return $this->belongsTo(Tournament::class, 'primary_tournament_id');
     }
-
 }

@@ -9,6 +9,8 @@ namespace App\Models;
  */
 class Sport extends BaseModel
 {
+    const FOOTBALL = 'Football';
+
     protected $fillable = [
         'name',
         'description',

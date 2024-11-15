@@ -24,16 +24,16 @@ enum Gender: string
         if (str_contains($name, 'woman') || str_contains($name, 'women') || str_contains($name, 'female')) {
             return self::Female;
         }
+
         return self::Male;
     }
 
     public function label(): string
     {
-        return match($this) {
+        return match ($this) {
             self::Male => 'Male',
             self::Female => 'Female',
             self::Mixed => 'Mixed',
         };
     }
-
 }

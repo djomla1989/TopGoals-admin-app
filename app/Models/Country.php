@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 /**
  * @property string name
  * @property string code

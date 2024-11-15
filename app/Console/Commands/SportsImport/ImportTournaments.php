@@ -35,48 +35,51 @@ class ImportTournaments extends Command
         $tournamentList = $conn->table('uniqueTournaments')->get();
 
         $sport = Sport::where('name', 'Football')->first();
-        if (!$sport) {
+        if (! $sport) {
             $this->info('Sport "Football" not found. Please import sports first.');
+
             return;
         }
 
         foreach ($tournamentList as $tournament) {
-            $tournament = (object)$tournament;
+            $tournament = (object) $tournament;
 
             $this->info("Importing country: {$tournament->name} - {$tournament->id}");
             $existingTournament = Tournament::where('name', $tournament->name)->first();
 
-
-            if ($existingTournament && !$this->option('overwrite')) {
+            if ($existingTournament && ! $this->option('overwrite')) {
                 $this->info("Tournament {$tournament->name} already exists. Use --overwrite to update.");
+
                 continue;
             }
 
             if (empty($tournament->category['id'])) {
                 $this->info("Country {$tournament->name} does not have a country_id. Skipping.");
+
                 continue;
             }
 
             $country = Country::where('import_id', $tournament->category['id'])->first();
 
-            if (!$country) {
+            if (! $country) {
                 $this->info("Country {$tournament->name} does not have a country_id. Skipping.");
+
                 continue;
             }
 
             $tournamentMeta = $conn->table('uniqueTournamentMeta')
                 ->where('uniqueTournament.id', $tournament->id)->first();
 
-            $tournamentMeta = (object)$tournamentMeta;
+            $tournamentMeta = (object) $tournamentMeta;
 
-            if (!$tournamentMeta) {
-                $this->error('Tournament meta not found for: ' . $tournament->name. ' - ' . $tournament->id);
+            if (! $tournamentMeta) {
+                $this->error('Tournament meta not found for: '.$tournament->name.' - '.$tournament->id);
             } else {
-                $this->question('Tournament meta found for: ' . $tournament->name. ' - ' . $tournament->id);
+                $this->question('Tournament meta found for: '.$tournament->name.' - '.$tournament->id);
             }
 
             $this->error($tournamentMeta?->competitionType ?? 'missing');
-            $tournamentModel = $existingTournament ?? new Tournament();
+            $tournamentModel = $existingTournament ?? new Tournament;
 
             $gender = Gender::resolveGender($tournamentMeta?->gender ?? 'missing', $tournament->name);
 
@@ -92,7 +95,7 @@ class ImportTournaments extends Command
 
             $tournamentModel->save();
 
-            $this->info("Imported/Updated tournament: " . $tournament->name);
+            $this->info('Imported/Updated tournament: '.$tournament->name);
 
         }
 

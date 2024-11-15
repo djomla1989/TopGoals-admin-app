@@ -12,9 +12,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string description
  * @property string image
  * @property int tournament_id
+ * @property Tournament tournament
  * @property int import_id
+ * @property Sport sport
+ * @property Country country
  */
-class TournamentSeason extends Model
+class TournamentSeason extends BaseModel
 {
     protected $fillable = [
         'name',

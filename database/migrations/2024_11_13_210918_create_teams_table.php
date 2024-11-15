@@ -24,7 +24,7 @@ return new class extends Migration
             $table->boolean('is_national')->default(false);
             $table->enum('gender', ['M', 'F', 'MIX'])->default('M');
             $table->string('primary_color');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TeamResource\Pages;
-use App\Filament\Resources\TeamResource\RelationManagers;
 use App\Models\Country;
 use App\Models\Team;
 use App\Models\Tournament;
@@ -13,7 +12,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TeamResource extends Resource
 {
@@ -58,6 +56,7 @@ class TeamResource extends Resource
                         '0' => 'success',
                         default => 'success',
                     }),
+                Tables\Columns\TextColumn::make('import_id')->searchable(),
 
             ])
             ->filters([
@@ -80,16 +79,17 @@ class TeamResource extends Resource
 
                                 $country = $get('country');
 
-                                if (!empty($country)) {
+                                if (! empty($country)) {
                                     return Tournament::query()->where('country_id', $country)->pluck('name', 'id')->toArray();
                                 }
+
                                 return Tournament::query()->pluck('name', 'id')->toArray();
                             })
                             ->label('Primary Tournament')
                             ->preload()
                             ->live()
                             ->reactive()
-                            ->searchable()
+                            ->searchable(),
                     ])->query(function (Builder $query, array $data) {
                         return $query
                             ->when(
@@ -100,25 +100,25 @@ class TeamResource extends Resource
                             )->when(
                                 $data['tournament'], function (Builder $query, $tournament) {
 
-                                return $query->where('primary_tournament_id', $tournament);
-                            });
+                                    return $query->where('primary_tournament_id', $tournament);
+                                });
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
 
                         if ($data['country'] ?? null) {
 
-                            $indicators[] = Tables\Filters\Indicator::make('Country: '. Country::find($data['country'])->name)
+                            $indicators[] = Tables\Filters\Indicator::make('Country: '.Country::find($data['country'])->name)
                                 ->removeField('country');
                         }
 
                         if ($data['tournament'] ?? null) {
-                            $indicators[] = Tables\Filters\Indicator::make('Primary tournament: ' . Tournament::find($data['tournament'])->name)
+                            $indicators[] = Tables\Filters\Indicator::make('Primary tournament: '.Tournament::find($data['tournament'])->name)
                                 ->removeField('tournament');
                         }
 
                         return $indicators;
-                    })
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -33,12 +33,13 @@ class ImportCountries extends Command
             $this->info("Importing country: {$country->name}");
             $existingCountry = Country::where('name', $country->name)->first();
 
-            if ($existingCountry && !$this->option('overwrite')) {
+            if ($existingCountry && ! $this->option('overwrite')) {
                 $this->info("Country {$country->name} already exists. Use --overwrite to update.");
+
                 continue;
             }
 
-            $countryModel = $existingCountry ?? new Country();
+            $countryModel = $existingCountry ?? new Country;
 
             $countryModel->name = $country->name;
             $countryModel->image = $country->image ?? '';
@@ -48,7 +49,7 @@ class ImportCountries extends Command
 
             $countryModel->save();
 
-            $this->info("Imported/Updated country: " . $country->name);
+            $this->info('Imported/Updated country: '.$country->name);
 
         }
 

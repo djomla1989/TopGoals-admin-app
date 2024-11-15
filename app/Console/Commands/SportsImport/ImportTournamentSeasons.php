@@ -33,38 +33,39 @@ class ImportTournamentSeasons extends Command
         $tournamentSeasonList = $conn->table('uniqueTournamentSeasons')->orderBy('name')->get();
 
         $sport = Sport::where('name', 'Football')->first();
-        if (!$sport) {
+        if (! $sport) {
             $this->info('Sport "Football" not found. Please import sports first.');
+
             return;
         }
 
         foreach ($tournamentSeasonList as $tournamentSeason) {
-            $tournamentSeason = (object)$tournamentSeason;
+            $tournamentSeason = (object) $tournamentSeason;
 
             $this->info("Importing tournament seasons: {$tournamentSeason->name} - {$tournamentSeason->id}");
             $existingTournamentSeason = Tournament::where('name', $tournamentSeason->name)->first();
 
-
-            if ($existingTournamentSeason && !$this->option('overwrite')) {
+            if ($existingTournamentSeason && ! $this->option('overwrite')) {
                 $this->info("Country {$tournamentSeason->name} already exists. Use --overwrite to update.");
+
                 continue;
             }
 
             if (empty($tournamentSeason->uniqueTournament['id'])) {
                 $this->info("Season {$tournamentSeason->name} does not have a tournament. Skipping.");
+
                 continue;
             }
 
             $tournament = Tournament::where('import_id', $tournamentSeason->uniqueTournament['id'])->first();
 
-            if (!$tournament) {
+            if (! $tournament) {
                 $this->info("Season {$tournamentSeason->name} does not have a tournament {$tournamentSeason->uniqueTournament['id']} in database. Skipping.");
+
                 continue;
             }
 
-
-            $tournamentSeasonModel = $existingTournamentSeason ?? new TournamentSeason();
-
+            $tournamentSeasonModel = $existingTournamentSeason ?? new TournamentSeason;
 
             $tournamentSeasonModel->name = $tournamentSeason->name;
             $tournamentSeasonModel->image = $tournamentSeason->image ?? '';
@@ -76,7 +77,7 @@ class ImportTournamentSeasons extends Command
 
             $tournamentSeasonModel->save();
 
-            $this->info("Imported/Updated tournament season: " . $tournamentSeason->name);
+            $this->info('Imported/Updated tournament season: '.$tournamentSeason->name);
 
         }
 

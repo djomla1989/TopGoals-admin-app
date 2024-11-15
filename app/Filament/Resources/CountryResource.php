@@ -3,15 +3,12 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\CountryResource\Pages;
-use App\Filament\Resources\CountryResource\RelationManagers;
 use App\Models\Country;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CountryResource extends Resource
 {
@@ -32,7 +29,7 @@ class CountryResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->maxLength(65535),
                 Forms\Components\FileUpload::make('image')->avatar(),
-                Forms\Components\TextInput::make('import_id')->disabled()
+                Forms\Components\TextInput::make('import_id')->disabled(),
             ])
             ->columns(1);
 
@@ -50,6 +47,7 @@ class CountryResource extends Resource
                 Tables\Columns\TextColumn::make('description')
                     ->limit(30)
                     ->searchable(),
+                Tables\Columns\TextColumn::make('import_id'),
             ])
             ->filters([
                 //

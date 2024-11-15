@@ -7,7 +7,6 @@ use App\Models\Country;
 use App\Models\Sport;
 use App\Models\Team;
 use App\Models\Tournament;
-use App\Models\TournamentSeason;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -48,24 +47,22 @@ class ImportTeams extends Command
             $this->info("Importing team: {$team->name} - {$team->id}");
             $existingTeam = Team::where('import_id', $team->id)->first();
 
-
-            if ($existingTeam && !$this->option('overwrite')) {
+            if ($existingTeam && ! $this->option('overwrite')) {
                 continue;
                 $this->info("Team {$team->name} already exists. Use --overwrite to update.");
             }
 
-
             if (empty($team->tournament)) {
                 $this->error("Team tournament not found for team: {$team->name} - {$team->id}");
+
                 continue;
             }
 
-
-            if (!isset($countryList[$team->tournament->category->id])) {
+            if (! isset($countryList[$team->tournament->category->id])) {
                 $countryModel = Country::where('import_id', $team->tournament->category->id)->first();
 
                 if (empty($countryModel)) {
-                    $countryModel = new Country();
+                    $countryModel = new Country;
                     $countryModel->name = $team->tournament->category->name;
                     $countryModel->code = $team->tournament->category?->alpha2 ?? '';
                     $countryModel->import_id = $team->tournament->category->id;
@@ -75,11 +72,11 @@ class ImportTeams extends Command
                 $countryList[$team->tournament->category->id] = $countryModel->id;
             }
 
-            if (!isset($primaryUniqueTournamentList[$team->tournament->uniqueTournament->id])) {
+            if (! isset($primaryUniqueTournamentList[$team->tournament->uniqueTournament->id])) {
                 $tournamentModel = Tournament::where('import_id', $team->tournament->uniqueTournament->id)->first();
 
                 if (empty($tournamentModel)) {
-                    $tournamentModel = new Tournament();
+                    $tournamentModel = new Tournament;
                     $tournamentModel->name = $team->tournament->uniqueTournament->name;
                     $tournamentModel->slug = $team->tournament->uniqueTournament->slug;
                     $tournamentModel->import_id = $team->tournament->uniqueTournament->id;
@@ -92,8 +89,7 @@ class ImportTeams extends Command
                 $primaryUniqueTournamentList[$team->tournament->uniqueTournament->id] = $tournamentModel->id;
             }
 
-            $teamModel = $existingTeam ?? new Team();
-
+            $teamModel = $existingTeam ?? new Team;
 
             $teamModel->name = $team->name;
             $teamModel->short_name = $team->shortName ?? '';
@@ -110,7 +106,7 @@ class ImportTeams extends Command
 
             $teamModel->save();
 
-            $this->info("Imported/Updated team: " . $teamModel->name);
+            $this->info('Imported/Updated team: '.$teamModel->name);
 
         }
 

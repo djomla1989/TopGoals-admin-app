@@ -39,6 +39,7 @@ class SportResource extends Resource
                 Tables\Columns\ImageColumn::make('image')->label('')->width(40)->circular(),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('description')->limit(30),
+                Tables\Columns\TextColumn::make('import_id'),
             ])
             ->filters([
                 //

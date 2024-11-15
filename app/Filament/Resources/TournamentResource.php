@@ -56,7 +56,8 @@ class TournamentResource extends Resource
                 Tables\Columns\TextColumn::make('type')
                     ->label('Type')
                     ->width(30)
-                    ->badge()
+                    ->badge(),
+                Tables\Columns\TextColumn::make('import_id')->searchable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('sport_id')
@@ -68,6 +69,7 @@ class TournamentResource extends Resource
 
                             return [$key => $item];
                         });
+
                         return $list;
                     })
 //                    ->getOptionLabelUsing(function ($record) {
@@ -88,18 +90,18 @@ class TournamentResource extends Resource
                     ->searchable()
                     ->label('Sport'),
                 Tables\Filters\SelectFilter::make('country_id')
-                    ->options(fn() => Country::query()->pluck('name', 'id'))
+                    ->options(fn () => Country::query()->pluck('name', 'id'))
 
                     ->searchable()
                     ->multiple()
                     ->label('Country'),
                 Tables\Filters\SelectFilter::make('gender')
-                    ->options(fn() => collect(Gender::cases())->mapWithKeys(fn($gender) => [$gender->value => $gender->label()]))
+                    ->options(fn () => collect(Gender::cases())->mapWithKeys(fn ($gender) => [$gender->value => $gender->label()]))
                     ->searchable()
                     ->multiple()
                     ->label('Gender'),
                 Tables\Filters\SelectFilter::make('type')
-                    ->options(fn() => collect(TournamentTypeEnum::cases())->mapWithKeys(fn($gender) => [$gender->value => $gender->label()]))
+                    ->options(fn () => collect(TournamentTypeEnum::cases())->mapWithKeys(fn ($gender) => [$gender->value => $gender->label()]))
                     ->searchable()
                     ->multiple()
                     ->label('League Type'),
@@ -117,7 +119,7 @@ class TournamentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\SeasonsRelationManager::class
+            RelationManagers\SeasonsRelationManager::class,
         ];
     }
 
