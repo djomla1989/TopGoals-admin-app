@@ -3,9 +3,6 @@
 namespace App\Console\Commands\SportsImport;
 
 use App\Jobs\ProcessTournamentSeasonNextEvents;
-use App\Models\Sport;
-use App\Models\Tournament;
-use App\Models\TournamentSeason;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 

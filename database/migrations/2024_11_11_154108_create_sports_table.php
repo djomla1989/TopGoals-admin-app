@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('sports', function (Blueprint $table) {
             $table->id();
+            $table->integer('import_id')->default(0);
             $table->string('name');
-            $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
         });

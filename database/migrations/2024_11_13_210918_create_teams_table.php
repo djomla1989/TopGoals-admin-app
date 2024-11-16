@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
+            $table->integer('import_id')->default(0);
             $table->string('name');
             $table->string('short_name');
             $table->string('code');
             $table->string('slug');
-            $table->integer('import_id');
             $table->foreignId('sport_id')->constrained('sports');
-            $table->foreignId('country_id')->constrained();
+            $table->foreignId('category_id')->constrained();
             $table->foreignId('primary_tournament_id')->nullable()->constrained('tournaments');
             $table->boolean('is_national')->default(false);
             $table->enum('gender', ['M', 'F', 'MIX'])->default('M');

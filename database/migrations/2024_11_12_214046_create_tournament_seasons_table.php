@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('tournament_seasons', function (Blueprint $table) {
             $table->id();
+            $table->integer('import_id')->default(0);
             $table->string('name');
             $table->string('year');
             $table->string('slug')->nullable();
-            $table->integer('import_id')->nullable();
             $table->foreignId('tournament_id')->constrained();
-            $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
         });

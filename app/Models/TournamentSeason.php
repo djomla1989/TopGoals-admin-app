@@ -7,24 +7,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string name
+ * @property int import_id
  * @property string year
  * @property string slug
- * @property string description
  * @property string image
  * @property int tournament_id
  * @property Tournament tournament
- * @property int import_id
+ * @property int category_id
+ * @property int sport_id
  * @property Sport sport
- * @property Country country
+ * @property Category category
  */
 class TournamentSeason extends BaseModel
 {
     protected $fillable = [
         'name',
+        'import_id',
         'year',
         'slug',
         'tournament_id',
-        'description',
         'image',
     ];
     //
@@ -32,5 +33,15 @@ class TournamentSeason extends BaseModel
     public function tournament(): BelongsTo
     {
         return $this->belongsTo(Tournament::class);
+    }
+
+    public function sport(): BelongsTo
+    {
+        return $this->belongsTo(Sport::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 }

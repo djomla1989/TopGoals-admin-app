@@ -26,8 +26,6 @@ class SportResource extends Resource
                     ->unique(ignoreRecord: true)
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->maxLength(65535),
                 Forms\Components\FileUpload::make('image'),
             ])->columns(1);
     }
@@ -38,7 +36,6 @@ class SportResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('image')->label('')->width(40)->circular(),
                 Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('description')->limit(30),
                 Tables\Columns\TextColumn::make('import_id'),
             ])
             ->filters([

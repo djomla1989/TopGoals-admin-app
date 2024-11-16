@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\Gender;
+use App\Enums\TournamentTypeEnum;
 use App\Models\Tournament;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -23,17 +24,37 @@ class TournamentFactory extends Factory
         ];
     }
 
-    public static function buildFromNextEvent(\stdClass $event, int $sportId, int $countryId): Tournament
+    public static function buildFromNextEvent(\stdClass $event, int $sportId, int $categoryId): Tournament
     {
-        $tournamentModel = new Tournament;
-
-        $tournamentModel->name = $event->tournament->uniqueTournament->name;
-        $tournamentModel->slug = $event->tournament->uniqueTournament->slug;
-        $tournamentModel->import_id = $event->tournament->uniqueTournament->id;
-        $tournamentModel->sport_id = $sportId;
-        $tournamentModel->country_id = $countryId;
+        $tournamentModel = TournamentFactory::buildFromTournament($event->tournament->uniqueTournament, $sportId, $categoryId);
         $tournamentModel->gender = Gender::resolveGender($event->homeTeam->gender ?? '', $event->slug);
-        $tournamentModel->save();
+
+        return $tournamentModel;
+    }
+
+    public static function buildFromTeam(\stdClass $team, int $sportId, int $categoryId): Tournament
+    {
+        $tournamentModel = TournamentFactory::buildFromTournament($team->tournament->uniqueTournament, $sportId, $categoryId);
+        $tournamentModel->gender =  Gender::resolveGender($team?->gender ?? '', $team->name);
+
+        return $tournamentModel;
+    }
+
+    public static function buildFromTournament(\stdClass $tournament, int $sportId, int $countryId, ?Tournament $exitingTournament = null): Tournament
+    {
+        if ($exitingTournament) {
+            $tournamentModel = $exitingTournament;
+        } else {
+            $tournamentModel = new Tournament();
+        }
+
+        $tournamentModel->name = $tournament->name;
+        $tournamentModel->import_id = $tournament->id;
+        $tournamentModel->slug = $tournament->slug ?? '';
+        $tournamentModel->sport_id = $sportId;
+        $tournamentModel->category_id = $countryId;
+        $tournamentModel->gender = Gender::resolveGender($tournament?->gender ?? '', $tournament->name);
+        $tournamentModel->type = $tournamentMeta?->competitionType ?? TournamentTypeEnum::LEAGUE->value;
 
         return $tournamentModel;
     }

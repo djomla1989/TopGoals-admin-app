@@ -23,7 +23,8 @@ return new class extends Migration
             $table->integer('start_timestamp');
             $table->foreignId('tournament_season_id')->constrained();
             $table->foreignId('tournament_id')->constrained();
-            $table->foreignId('country_id')->constrained();
+            $table->foreignId('tournament_season_group_id')->constrained();
+            $table->foreignId('category_id')->constrained();
             $table->foreignId('sport_id')->constrained();
             $table->integer('round');
             $table->string('status');

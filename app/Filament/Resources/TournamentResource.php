@@ -6,7 +6,7 @@ use App\Enums\Gender;
 use App\Enums\TournamentTypeEnum;
 use App\Filament\Resources\TournamentResource\Pages;
 use App\Filament\Resources\TournamentResource\RelationManagers;
-use App\Models\Country;
+use App\Models\Category;
 use App\Models\Sport;
 use App\Models\Tournament;
 use Filament\Forms\Form;
@@ -51,8 +51,8 @@ class TournamentResource extends Resource
                     ->label('Seasons')
                     ->counts('seasons')
                     ->sortable(),
-                Tables\Columns\ImageColumn::make('country.image')->label('')->width(40)->circular(),
-                Tables\Columns\TextColumn::make('country.name')->label('Country')->sortable()->searchable(),
+                Tables\Columns\ImageColumn::make('category.image')->label('')->width(40)->circular(),
+                Tables\Columns\TextColumn::make('category.name')->label('Category')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('type')
                     ->label('Type')
                     ->width(30)
@@ -89,12 +89,12 @@ class TournamentResource extends Resource
 //                    })
                     ->searchable()
                     ->label('Sport'),
-                Tables\Filters\SelectFilter::make('country_id')
-                    ->options(fn () => Country::query()->pluck('name', 'id'))
+                Tables\Filters\SelectFilter::make('category_id')
+                    ->options(fn () => Category::query()->pluck('name', 'id'))
 
                     ->searchable()
                     ->multiple()
-                    ->label('Country'),
+                    ->label('Category'),
                 Tables\Filters\SelectFilter::make('gender')
                     ->options(fn () => collect(Gender::cases())->mapWithKeys(fn ($gender) => [$gender->value => $gender->label()]))
                     ->searchable()

@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int id
+ * @property string import_id
  * @property string name
  * @property string short_name
  * @property string code
  * @property string slug
- * @property string import_id
  * @property int sport_id
- * @property int country_id
+ * @property int category_id
  * @property int primary_tournament_id
  * @property bool is_national
  * @property string gender
@@ -23,13 +23,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Team extends BaseModel
 {
     protected $fillable = [
+        'import_id',
         'name',
         'short_name',
         'code',
         'slug',
-        'import_id',
         'sport_id',
-        'country_id',
+        'category_id',
         'primary_tournament_id',
         'is_national',
         'gender',
@@ -42,9 +42,9 @@ class Team extends BaseModel
         return $this->belongsTo(Sport::class);
     }
 
-    public function country(): BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(Country::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function primaryTournament(): BelongsTo

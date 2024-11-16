@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('import_id')->nullable();
             $table->string('name');
             $table->string('slug');
-            $table->string('group_name');
+            $table->string('group_name')->nullable()->default(null);
             $table->foreignId('tournament_id')->constrained();
             $table->foreignId('tournament_season_id')->constrained();
             $table->boolean('is_group');

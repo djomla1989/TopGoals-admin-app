@@ -35,4 +35,21 @@ class TournamentSeasonFactory extends Factory
 
         return $tournamentSeasonModel;
     }
+
+    public static function buildFromSeason(\stdClass $season, int $tournamentId, ?TournamentSeason $exitingTournamentSeason = null): TournamentSeason
+    {
+        if ($exitingTournamentSeason) {
+            $tournamentSeasonModel = $exitingTournamentSeason;
+        } else {
+            $tournamentSeasonModel = new TournamentSeason();
+        }
+
+        $tournamentSeasonModel->name = $season->name;
+        $tournamentSeasonModel->import_id = $season->id;
+        $tournamentSeasonModel->slug = $season->slug ?? '';
+        $tournamentSeasonModel->tournament_id = $tournamentId;
+        $tournamentSeasonModel->year = $season->year;
+
+        return $tournamentSeasonModel;
+    }
 }

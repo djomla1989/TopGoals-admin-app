@@ -10,9 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int import_id
  * @property string gender
  * @property string slug
- * @property string description
  * @property int sport_id
- * @property int country_id
+ * @property int category_id
  * @property string image
  * @property string type
  */
@@ -22,8 +21,7 @@ class Tournament extends BaseModel
         'name',
         'slug',
         'sport_id',
-        'country_id',
-        'description',
+        'category_id',
         'image',
         'gender',
         'type',
@@ -34,9 +32,9 @@ class Tournament extends BaseModel
         return $this->belongsTo(Sport::class);
     }
 
-    public function country(): BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(Country::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function seasons(): HasMany

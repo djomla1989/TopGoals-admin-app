@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
+ * @property int id
  * @property int import_id
  * @property string name
  * @property string slug
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int tournament_season_id
  * @property boolean is_group
  * @property int priority
+ * @property Tournament tournament
+ * @property TournamentSeason tournamentSeason
  */
 class TournamentSeasonGroup extends BaseModel
 {

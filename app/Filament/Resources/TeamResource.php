@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TeamResource\Pages;
-use App\Models\Country;
+use App\Models\Category;
 use App\Models\Team;
 use App\Models\Tournament;
 use Filament\Forms;
@@ -40,7 +40,7 @@ class TeamResource extends Resource
                 Tables\Columns\TextColumn::make('primaryTournament.name')
                     ->label('Primary Tournament')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('country.name'),
+                Tables\Columns\TextColumn::make('category.name'),
                 Tables\Columns\TextColumn::make('sport.name'),
                 Tables\Columns\TextColumn::make('gender')
                     ->badge()
@@ -65,8 +65,8 @@ class TeamResource extends Resource
                 Tables\Filters\Filter::make('custom')
                     ->label('Custom')
                     ->form([
-                        Forms\Components\Select::make('country')
-                            ->options(fn () => Country::pluck('name', 'id')->toArray())
+                        Forms\Components\Select::make('category')
+                            ->options(fn () => Category::pluck('name', 'id')->toArray())
                             ->preload()
                             ->live()
                             ->reactive()
@@ -77,10 +77,10 @@ class TeamResource extends Resource
                         Forms\Components\Select::make('tournament')
                             ->options(function (Forms\Get $get) {
 
-                                $country = $get('country');
+                                $category = $get('category');
 
-                                if (! empty($country)) {
-                                    return Tournament::query()->where('country_id', $country)->pluck('name', 'id')->toArray();
+                                if (! empty($category)) {
+                                    return Tournament::query()->where('category_id', $category)->pluck('name', 'id')->toArray();
                                 }
 
                                 return Tournament::query()->pluck('name', 'id')->toArray();
@@ -93,9 +93,9 @@ class TeamResource extends Resource
                     ])->query(function (Builder $query, array $data) {
                         return $query
                             ->when(
-                                $data['country'], function (Builder $query, $country) {
+                                $data['category'], function (Builder $query, $category) {
 
-                                    return $query->where('country_id', $country);
+                                    return $query->where('category', $category);
                                 }
                             )->when(
                                 $data['tournament'], function (Builder $query, $tournament) {
@@ -106,10 +106,10 @@ class TeamResource extends Resource
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
 
-                        if ($data['country'] ?? null) {
+                        if ($data['category'] ?? null) {
 
-                            $indicators[] = Tables\Filters\Indicator::make('Country: '.Country::find($data['country'])->name)
-                                ->removeField('country');
+                            $indicators[] = Tables\Filters\Indicator::make('Category: '.Category::find($data['category'])->name)
+                                ->removeField('category');
                         }
 
                         if ($data['tournament'] ?? null) {

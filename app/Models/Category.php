@@ -3,19 +3,21 @@
 namespace App\Models;
 
 /**
+ * @property int import_id
  * @property string name
  * @property string code
- * @property string description
+ * @property string slug
+ * @property int priority
  * @property string image
- * @property int import_id
  */
-class Country extends BaseModel
+class Category extends BaseModel
 {
     protected $fillable = [
+        'import_id',
         'name',
         'code',
-        'description',
+        'slug',
+        'priority',
         'image',
-
     ];
 }

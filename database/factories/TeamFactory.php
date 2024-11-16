@@ -24,21 +24,27 @@ class TeamFactory extends Factory
         ];
     }
 
-    public static function buildFromNextEventTeam(\stdClass $team, TournamentSeason $season): Team
+    public static function buildFromTeam(
+        \stdClass $team,
+        int $sportId,
+        int $categoryId,
+        ?int $primaryTournamentId,
+        ?Team $existingTeam = null,
+    ): Team
     {
-        $teamModel = new Team();
+        $teamModel = $existingTeam ?? new Team();
 
-        $teamModel->name = $team->name;
-        $teamModel->slug = $team->slug;
-        $teamModel->code = $team->nameCode;
-        $teamModel->short_name = $team->shortName;
         $teamModel->import_id = $team->id;
-        $teamModel->sport_id = $season->tournament->sport_id;
-        $teamModel->country_id = $season->tournament->country_id;
-        $teamModel->primary_tournament_id = $season->tournament_id;
-        $teamModel->is_national = $team->national;
+        $teamModel->name = $team->name;
+        $teamModel->short_name = $team->shortName ?? '';
+        $teamModel->code = $team->nameCode ?? '';
+        $teamModel->slug = $team->slug ?? '';
+        $teamModel->sport_id = $sportId;
+        $teamModel->category_id = $categoryId;
+        $teamModel->primary_tournament_id = $primaryTournamentId;
+        $teamModel->is_national = $team->national ?? false;
         $teamModel->gender = Gender::resolveGender($team?->gender ?? '', $team->name);
-        $teamModel->primary_color = $team?->teamColor?->primary ?? '';
+        $teamModel->primary_color = $team->teamColors->primary ?? '';
 
         return $teamModel;
     }
