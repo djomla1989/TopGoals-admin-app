@@ -72,21 +72,6 @@ class TournamentResource extends Resource
 
                         return $list;
                     })
-//                    ->getOptionLabelUsing(function ($record) {
-//                        dd($record);
-//                        return new HtmlString("<img src='{$record->image}' alt='{$record->name}' class='sport-icon'>111 {$record->name}");
-//                    })
-//                    ->options(function () {
-//                        $sports = Sport::all();
-//
-//                        $list = $sports->mapWithKeys(function ($sport) {
-//                            $imageUrl = url('/storage/' . $sport->image); // Putanja do slike
-//                            $html = new HtmlString("<img src='{$imageUrl}' alt='{$sport->name}' class='sport-icon'>111 {$sport->name}");
-//                            return [$sport->id => $html];
-//                        });
-//                        return $sports;
-//                        //dd($list);
-//                    })
                     ->searchable()
                     ->label('Sport'),
                 Tables\Filters\SelectFilter::make('category_id')

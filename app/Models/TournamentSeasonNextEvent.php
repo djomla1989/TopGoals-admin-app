@@ -56,6 +56,11 @@ class TournamentSeasonNextEvent extends BaseModel
         return $this->belongsTo(TournamentSeason::class);
     }
 
+    public function tournamentSeasonGroup(): BelongsTo
+    {
+        return $this->belongsTo(TournamentSeasonGroup::class);
+    }
+
     public function homeTeam(): BelongsTo
     {
         return $this->belongsTo(Team::class);

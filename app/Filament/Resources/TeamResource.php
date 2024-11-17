@@ -95,7 +95,7 @@ class TeamResource extends Resource
                             ->when(
                                 $data['category'], function (Builder $query, $category) {
 
-                                    return $query->where('category', $category);
+                                    return $query->where('category_id', $category);
                                 }
                             )->when(
                                 $data['tournament'], function (Builder $query, $tournament) {

@@ -58,6 +58,8 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Sport Setup'),
+                NavigationGroup::make()
+                    ->label('Events'),
             ]);
     }
 }
