@@ -29,6 +29,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./docker/8.3/Dockerfile
+          file: ./docker/8.3/Dockerfile-Github-Build
           push: true
           tags: ghcr.io/${{ steps.repo_name.outputs.lower_repo }}:latest
