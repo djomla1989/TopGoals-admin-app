@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\SportsImport\Tipster;
 
-use App\Models\Sport;
 use App\Models\Tipster\SportTipster;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -44,7 +43,7 @@ class ImportSportsTipster extends Command
                 continue;
             }
 
-            $sportModel = $existingSport ?? new SportTipster();
+            $sportModel = $existingSport ?? new SportTipster;
 
             $sportModel->name = $sport->name;
             $sportModel->import_id = $sport->id;

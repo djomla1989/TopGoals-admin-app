@@ -2,8 +2,6 @@
 
 namespace App\Console\Commands\SportsImport;
 
-use App\Enums\Gender;
-use App\Enums\TournamentTypeEnum;
 use App\Models\Category;
 use App\Models\Sport;
 use App\Models\Tournament;
@@ -56,6 +54,7 @@ class ImportTournaments extends Command
 
             if ($existingTournament && ! $this->option('overwrite')) {
                 $this->info("Tournament {$tournament->name} already exists. Use --overwrite to update.");
+
                 continue;
             }
 
@@ -67,15 +66,16 @@ class ImportTournaments extends Command
 
             $category = Category::where('import_id', $tournament->category['id'])->first();
 
-            if (!$category) {
+            if (! $category) {
                 $this->error("Country {$tournament->name} does not have a category_id. Skipping.");
+
                 continue;
             }
 
             $tournamentMeta = $conn->table('uniqueTournamentMeta')
                 ->where('uniqueTournament.id', $tournament->id)->first();
 
-            if (!$tournamentMeta) {
+            if (! $tournamentMeta) {
                 $this->error('Tournament meta not found for: '.$tournament->name.' - '.$tournament->id);
             }
 

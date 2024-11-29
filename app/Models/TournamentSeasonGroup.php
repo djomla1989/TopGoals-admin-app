@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -13,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string group_name
  * @property int tournament_id
  * @property int tournament_season_id
- * @property boolean is_group
+ * @property bool is_group
  * @property int priority
  * @property Tournament tournament
  * @property TournamentSeason tournamentSeason

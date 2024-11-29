@@ -43,7 +43,6 @@ class ImportCategories extends Command
 
             $categoryModel = $existingCategory ?? new Category;
 
-
             $categoryModel->name = $category->name;
             $categoryModel->import_id = $category->id;
             $categoryModel->code = $category->alpha2 ?? '';

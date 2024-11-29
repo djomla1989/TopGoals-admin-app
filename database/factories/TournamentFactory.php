@@ -27,7 +27,7 @@ class TournamentFactory extends Factory
     public static function buildFromNextEvent(\stdClass $event, int $sportId, int $categoryId): Tournament
     {
         $tournamentModel = TournamentFactory::buildFromTournament($event->tournament->uniqueTournament, $sportId, $categoryId);
-        $tournamentModel->gender = Gender::resolveGender($event->homeTeam->gender ?? '', $event->slug);
+        $tournamentModel->gender = Gender::resolveGender($event->homeTeam->gender ?? '', $event->slug)->value;
 
         return $tournamentModel;
     }
@@ -35,7 +35,7 @@ class TournamentFactory extends Factory
     public static function buildFromTeam(\stdClass $team, int $sportId, int $categoryId): Tournament
     {
         $tournamentModel = TournamentFactory::buildFromTournament($team->tournament->uniqueTournament, $sportId, $categoryId);
-        $tournamentModel->gender =  Gender::resolveGender($team?->gender ?? '', $team->name);
+        $tournamentModel->gender = Gender::resolveGender($team?->gender ?? '', $team->name)->value;
 
         return $tournamentModel;
     }
@@ -45,7 +45,7 @@ class TournamentFactory extends Factory
         if ($exitingTournament) {
             $tournamentModel = $exitingTournament;
         } else {
-            $tournamentModel = new Tournament();
+            $tournamentModel = new Tournament;
         }
 
         $tournamentModel->name = $tournament->name;
@@ -53,7 +53,7 @@ class TournamentFactory extends Factory
         $tournamentModel->slug = $tournament->slug ?? '';
         $tournamentModel->sport_id = $sportId;
         $tournamentModel->category_id = $countryId;
-        $tournamentModel->gender = Gender::resolveGender($tournament?->gender ?? '', $tournament->name);
+        $tournamentModel->gender = Gender::resolveGender($tournament?->gender ?? '', $tournament->name)->value;
         $tournamentModel->type = $tournamentMeta?->competitionType ?? TournamentTypeEnum::LEAGUE->value;
 
         return $tournamentModel;

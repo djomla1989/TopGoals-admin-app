@@ -42,8 +42,7 @@ class ImportCategoriesTipster extends Command
                 continue;
             }
 
-            $categoryModel = $existingCategory ?? new CategoryTipster();
-
+            $categoryModel = $existingCategory ?? new CategoryTipster;
 
             $categoryModel->name = $category->name;
             $categoryModel->import_id = $category->id;

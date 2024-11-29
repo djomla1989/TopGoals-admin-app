@@ -36,8 +36,7 @@ class ProcessTournamentSeasonNextEvents implements ShouldQueue
         array $tournamentSeasonNextEventsData,
         bool $debug = false,
         bool $overwrite = false
-    )
-    {
+    ) {
         $this->data = $tournamentSeasonNextEventsData;
         $this->debug = $debug;
         $this->overwrite = $overwrite;
@@ -58,11 +57,11 @@ class ProcessTournamentSeasonNextEvents implements ShouldQueue
             $season = TournamentSeason::query()->where('import_id', $data->uniqueTournamentSeason->id)->first();
             $sport = Sport::query()->where('name', Sport::FOOTBALL)->first();
 
-            $this->writeLog('Processing tournament season next events: ' . $data->uniqueTournamentSeason->id, true);
+            $this->writeLog('Processing tournament season next events: '.$data->uniqueTournamentSeason->id, true);
 
             $firstEvent = $data->events[0];
             if (empty($firstEvent)) {
-                $this->writeLog('No events found for tournament season ' . $data->uniqueTournamentSeason->id, true);
+                $this->writeLog('No events found for tournament season '.$data->uniqueTournamentSeason->id, true);
 
                 return;
             }
@@ -75,7 +74,7 @@ class ProcessTournamentSeasonNextEvents implements ShouldQueue
             }
 
             if (empty($tournament)) {
-                $this->writeLog('Tournament not found for tournament season : ' . $data->uniqueTournament->id . ' try to create ', true);
+                $this->writeLog('Tournament not found for tournament season : '.$data->uniqueTournament->id.' try to create ', true);
                 $tournament = TournamentFactory::buildFromNextEvent($firstEvent, $sport->id, $category->id);
                 $tournament->save();
             }
@@ -91,8 +90,9 @@ class ProcessTournamentSeasonNextEvents implements ShouldQueue
                 $eventExist = TournamentSeasonNextEvent::query()
                     ->where('import_id', $event->id)
                     ->first();
-                if (!empty($eventExist) && false === $this->overwrite) {
-                    $this->writeLog('Event already exist:' . $event->id, true);
+                if (! empty($eventExist) && $this->overwrite === false) {
+                    $this->writeLog('Event already exist:'.$event->id, true);
+
                     continue;
                 }
 
@@ -139,22 +139,22 @@ class ProcessTournamentSeasonNextEvents implements ShouldQueue
                 );
             }
 
-            if (!empty($eventForSave)) {
+            if (! empty($eventForSave)) {
                 if ($this->overwrite) {
                     TournamentSeasonNextEvent::query()->updateOrInsert($eventForSave);
                 } else {
                     TournamentSeasonNextEvent::query()->insert($eventForSave);
                 }
 
-                $this->writeLog(count($eventForSave) . ' Events saved for tournament season ' . $data->uniqueTournamentSeason->id, true);
+                $this->writeLog(count($eventForSave).' Events saved for tournament season '.$data->uniqueTournamentSeason->id, true);
             } else {
-                $this->writeLog('No events found for tournament season ' . $data->uniqueTournamentSeason->id, true);
+                $this->writeLog('No events found for tournament season '.$data->uniqueTournamentSeason->id, true);
             }
 
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            $this->writeLog('Error while processing tournament season next events: ' .$e->getMessage(). $e->getTraceAsString(), true);
+            $this->writeLog('Error while processing tournament season next events: '.$e->getMessage().$e->getTraceAsString(), true);
         }
     }
 

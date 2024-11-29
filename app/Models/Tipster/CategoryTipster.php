@@ -3,7 +3,7 @@
 namespace App\Models\Tipster;
 
 use App\Models\BaseModel;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $slug
  * @property string $code
+ * @property TournamentTipster[] $tournaments
  */
 class CategoryTipster extends BaseModel
 {
@@ -22,4 +23,9 @@ class CategoryTipster extends BaseModel
         'slug',
         'code',
     ];
+
+    public function tournaments(): HasMany
+    {
+        return $this->hasMany(TournamentTipster::class, 'category_id');
+    }
 }

@@ -3,7 +3,6 @@
 namespace App\Models\Tipster;
 
 use App\Models\BaseModel;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
@@ -13,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SportTipster extends BaseModel
 {
+    protected $table = 'sports_tipsters';
+
     protected $fillable = [
         'import_id',
         'name',
