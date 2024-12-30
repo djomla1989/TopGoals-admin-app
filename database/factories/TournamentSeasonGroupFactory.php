@@ -27,9 +27,8 @@ class TournamentSeasonGroupFactory extends Factory
         int $tournamentId,
         int $tournamentSeasonId,
         ?TournamentSeasonGroup $existingGroup = null
-    ): TournamentSeasonGroup
-    {
-        $tournamentSeasonGroupModel = $existingGroup ?? new TournamentSeasonGroup();
+    ): TournamentSeasonGroup {
+        $tournamentSeasonGroupModel = $existingGroup ?? new TournamentSeasonGroup;
 
         $tournamentSeasonGroupModel->import_id = $group->id;
         $tournamentSeasonGroupModel->name = $group->name;

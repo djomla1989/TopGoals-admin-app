@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\SportsImport;
 
-use App\Enums\Gender;
 use App\Models\Category;
 use App\Models\Sport;
 use App\Models\Team;
@@ -61,15 +60,17 @@ class ImportTeams extends Command
 
             if ($existingTeam && ! $this->option('overwrite')) {
                 $this->error("Team {$team->name} already exists. Use --overwrite to update.");
+
                 continue;
             }
 
             if (empty($team->tournament) && empty($team->primaryUniqueTournament)) {
                 $this->error("Team tournament and primaryUniqueTournament not found for team: {$team->name} - {$team->id}");
+
                 continue;
             }
 
-            if (!empty($team->tournament)) {
+            if (! empty($team->tournament)) {
                 $teamTournament = $team->tournament;
             } else {
                 $teamTournament = $team->primaryUniqueTournament;
@@ -92,7 +93,7 @@ class ImportTeams extends Command
             }
 
             $tournamentId = $teamTournament->uniqueTournament->id ?? null;
-            if (!empty($tournamentId) && ! isset($primaryUniqueTournamentList[$tournamentId])) {
+            if (! empty($tournamentId) && ! isset($primaryUniqueTournamentList[$tournamentId])) {
                 $tournamentModel = Tournament::where('import_id', $teamTournament->uniqueTournament->id)->first();
 
                 if (empty($tournamentModel)) {
@@ -119,7 +120,7 @@ class ImportTeams extends Command
             if ($liveMode) {
                 $teamModel->save();
 
-                $this->info('Imported/Updated team: `' . $teamModel->name. '` - import id:' . $teamModel->import_id);
+                $this->info('Imported/Updated team: `'.$teamModel->name.'` - import id:'.$teamModel->import_id);
             }
 
         }

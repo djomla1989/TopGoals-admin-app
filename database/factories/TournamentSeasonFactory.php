@@ -41,7 +41,7 @@ class TournamentSeasonFactory extends Factory
         if ($exitingTournamentSeason) {
             $tournamentSeasonModel = $exitingTournamentSeason;
         } else {
-            $tournamentSeasonModel = new TournamentSeason();
+            $tournamentSeasonModel = new TournamentSeason;
         }
 
         $tournamentSeasonModel->name = $season->name;

@@ -4,24 +4,18 @@ namespace App\Filament\Resources;
 
 use App\Enums\DateEnum;
 use App\Filament\Resources\TournamentSeasonNextEventResource\Pages;
-use App\Filament\Resources\TournamentSeasonNextEventResource\RelationManagers;
 use App\Models\Category;
 use App\Models\Tournament;
 use App\Models\TournamentSeasonNextEvent;
 use Carbon\Carbon;
-use Carbon\Traits\Date;
-use DeepCopy\TypeFilter\Date\DatePeriodFilter;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Infolists\Components\Grid;
-use Filament\Infolists\Components\Group;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TournamentSeasonNextEventResource extends Resource
 {
@@ -79,82 +73,81 @@ class TournamentSeasonNextEventResource extends Resource
             ])
             ->filters([
                 Tables\Filters\Filter::make('startAt')
-                ->form([
-                    Forms\Components\DateTimePicker::make('startFrom')
-                        ->timezone(DateEnum::UTC_TIMEZONE->value)
-                        ->seconds(false)
-                        ->format(DateEnum::DATE_TIME_FORMAT->value),
-                    Forms\Components\DateTimePicker::make('startTo')
-                        ->seconds(false)
-                        ->format(DateEnum::DATE_TIME_FORMAT->value),
-                ])->query(function (Builder $query, array $data) {
-                    return $query->when(
-                        $data['startFrom'], function (Builder $query, $startFrom) {
-                            return $query->where('start_timestamp', '>=', strtotime($startFrom));
-                    })->when(
-                        $data['startTo'],
-                        function (Builder $query, $startTo) {
-                            return $query->where('start_timestamp', '<=', strtotime($startTo));
-                        });
-                })->indicateUsing(function (array $data): array {
-                    $indicators = [];
+                    ->form([
+                        Forms\Components\DateTimePicker::make('startFrom')
+                            ->timezone(DateEnum::UTC_TIMEZONE->value)
+                            ->seconds(false)
+                            ->format(DateEnum::DATE_TIME_FORMAT->value),
+                        Forms\Components\DateTimePicker::make('startTo')
+                            ->seconds(false)
+                            ->format(DateEnum::DATE_TIME_FORMAT->value),
+                    ])->query(function (Builder $query, array $data) {
+                        return $query->when(
+                            $data['startFrom'], function (Builder $query, $startFrom) {
+                                return $query->where('start_timestamp', '>=', strtotime($startFrom));
+                            })->when(
+                                $data['startTo'],
+                                function (Builder $query, $startTo) {
+                                    return $query->where('start_timestamp', '<=', strtotime($startTo));
+                                });
+                    })->indicateUsing(function (array $data): array {
+                        $indicators = [];
 
-                    if ($data['startFrom'] ?? null) {
-                        $startFrom = Carbon::make($data['startFrom']);
-                        $indicators[] = Tables\Filters\Indicator::make('Start From: '.$startFrom->format(DateEnum::DATE_TIME_FORMAT->value))
-                            ->removeField('startFrom');
-                    }
+                        if ($data['startFrom'] ?? null) {
+                            $startFrom = Carbon::make($data['startFrom']);
+                            $indicators[] = Tables\Filters\Indicator::make('Start From: '.$startFrom->format(DateEnum::DATE_TIME_FORMAT->value))
+                                ->removeField('startFrom');
+                        }
 
-                    if ($data['startTo'] ?? null) {
-                        $startTo = Carbon::make($data['startTo']);
-                        $indicators[] = Tables\Filters\Indicator::make('Start To: '.$startTo->format(DateEnum::DATE_TIME_FORMAT->value))
-                            ->removeField('startTo');
-                    }
+                        if ($data['startTo'] ?? null) {
+                            $startTo = Carbon::make($data['startTo']);
+                            $indicators[] = Tables\Filters\Indicator::make('Start To: '.$startTo->format(DateEnum::DATE_TIME_FORMAT->value))
+                                ->removeField('startTo');
+                        }
 
-                    return $indicators;
-                })
-                ,
+                        return $indicators;
+                    }),
                 Tables\Filters\Filter::make('custom')
                     ->label('Custom')
                     ->form([
-                        Forms\Components\Select::make('category')
-                            ->options(fn () => Category::pluck('name', 'id')->toArray())
-                            ->preload()
-                            ->live()
-                            ->reactive()
-                            ->afterStateUpdated(function (Forms\Set $set) {
-                                $set('tournament', null);
-                            })
-                            ->searchable(),
-                        Forms\Components\Select::make('tournament')
-                            ->options(function (Forms\Get $get) {
+                            Forms\Components\Select::make('category')
+                                ->options(fn () => Category::pluck('name', 'id')->toArray())
+                                ->preload()
+                                ->live()
+                                ->reactive()
+                                ->afterStateUpdated(function (Forms\Set $set) {
+                                    $set('tournament', null);
+                                })
+                                ->searchable(),
+                            Forms\Components\Select::make('tournament')
+                                ->options(function (Forms\Get $get) {
 
-                                $category = $get('category');
+                                    $category = $get('category');
 
-                                if (! empty($category)) {
-                                    return Tournament::query()->where('category_id', $category)->pluck('name', 'id')->toArray();
-                                }
+                                    if (! empty($category)) {
+                                        return Tournament::query()->where('category_id', $category)->pluck('name', 'id')->toArray();
+                                    }
 
-                                return Tournament::query()->pluck('name', 'id')->toArray();
-                            })
-                            ->label('Primary Tournament')
-                            ->preload()
-                            ->live()
-                            ->reactive()
-                            ->searchable(),
-                    ])->query(function (Builder $query, array $data) {
-                        return $query
-                            ->when(
-                                $data['category'], function (Builder $query, $category) {
+                                    return Tournament::query()->pluck('name', 'id')->toArray();
+                                })
+                                ->label('Primary Tournament')
+                                ->preload()
+                                ->live()
+                                ->reactive()
+                                ->searchable(),
+                        ])->query(function (Builder $query, array $data) {
+                            return $query
+                                ->when(
+                                    $data['category'], function (Builder $query, $category) {
 
-                                return $query->where('category_id', $category);
-                            }
-                            )->when(
-                                $data['tournament'], function (Builder $query, $tournament) {
+                                        return $query->where('category_id', $category);
+                                    }
+                                )->when(
+                                    $data['tournament'], function (Builder $query, $tournament) {
 
-                                return $query->where('tournament_id', $tournament);
-                            });
-                    })
+                                        return $query->where('tournament_id', $tournament);
+                                    });
+                        })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
 
@@ -204,7 +197,6 @@ class TournamentSeasonNextEventResource extends Resource
             TextEntry::make('start_timestamp')->dateTime(DateEnum::DATE_TIME_FORMAT->value),
         ]);
     }
-
 
     public static function getPages(): array
     {

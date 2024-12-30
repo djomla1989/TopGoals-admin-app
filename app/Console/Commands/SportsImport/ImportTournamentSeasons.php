@@ -4,7 +4,6 @@ namespace App\Console\Commands\SportsImport;
 
 use App\Models\Sport;
 use App\Models\Tournament;
-use App\Models\TournamentSeason;
 use Database\Factories\TournamentSeasonFactory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -61,6 +60,7 @@ class ImportTournamentSeasons extends Command
                 if ($this->option('v')) {
                     $this->info("Tournament season {$tournamentSeason->name} already exists. Use --overwrite to update.");
                 }
+
                 continue;
             }
 
@@ -68,10 +68,9 @@ class ImportTournamentSeasons extends Command
 
             if (! $tournament) {
                 $this->error("Season {$tournamentSeason->name} does not have a tournament {$tournamentSeason->uniqueTournament->id} in database. Skipping.");
+
                 continue;
             }
-
-
 
             $tournamentSeasonModel = TournamentSeasonFactory::buildFromSeason(
                 $tournamentSeason,

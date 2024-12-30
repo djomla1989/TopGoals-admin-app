@@ -33,8 +33,6 @@ class TournamentSeasonNextEventFactory extends Factory
         ?TournamentSeasonNextEvent $existingNextEvent = null
     ): array {
 
-
-
         $data = [
             'customId' => $nextEvent->customId,
             'slug' => $nextEvent->slug,

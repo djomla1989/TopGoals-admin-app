@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands\SportsImport;
 
-use App\Models\Category;
 use App\Models\Sport;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -44,7 +43,7 @@ class ImportSports extends Command
                 continue;
             }
 
-            $sportModel = $existingSport ?? new Sport();
+            $sportModel = $existingSport ?? new Sport;
 
             $sportModel->name = $sport->name;
             $sportModel->import_id = $sport->id;

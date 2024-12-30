@@ -27,7 +27,7 @@ class CategoryFactory extends Factory
         if ($existingCategory) {
             $categoryModel = $existingCategory;
         } else {
-            $categoryModel = new Category();
+            $categoryModel = new Category;
         }
 
         $categoryModel->name = $category->name;

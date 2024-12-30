@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Enums\Gender;
 use App\Models\Team;
-use App\Models\TournamentSeason;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -30,9 +29,8 @@ class TeamFactory extends Factory
         int $categoryId,
         ?int $primaryTournamentId,
         ?Team $existingTeam = null,
-    ): Team
-    {
-        $teamModel = $existingTeam ?? new Team();
+    ): Team {
+        $teamModel = $existingTeam ?? new Team;
 
         $teamModel->import_id = $team->id;
         $teamModel->name = $team->name;
@@ -43,7 +41,7 @@ class TeamFactory extends Factory
         $teamModel->category_id = $categoryId;
         $teamModel->primary_tournament_id = $primaryTournamentId;
         $teamModel->is_national = $team->national ?? false;
-        $teamModel->gender = Gender::resolveGender($team?->gender ?? '', $team->name);
+        $teamModel->gender = Gender::resolveGender($team?->gender ?? '', $team->name)->value;
         $teamModel->primary_color = $team->teamColors->primary ?? '';
 
         return $teamModel;
