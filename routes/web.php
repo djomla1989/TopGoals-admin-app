@@ -4,6 +4,11 @@ use App\Http\Controllers\Mapper\MappingController;
 use App\Http\Controllers\Mapper\MapSeasonsController;
 use App\Http\Controllers\Mapper\MapTournamentController;
 use App\Http\Controllers\Mapper\MapTournamentSeasonsController;
+use App\Models\Tipster\TournamentTipster;
+use App\Models\Tournament;
+use App\Services\DataImporters\Mappers\FuzzySearch;
+use FuzzyWuzzy\Fuzz;
+use FuzzyWuzzy\Process;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 

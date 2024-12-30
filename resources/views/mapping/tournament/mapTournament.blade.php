@@ -37,8 +37,7 @@
                                     // Proveri da li postoji automatsko mapiranje
                                     foreach ($mapTournament as $tournamentCheck) {
                                         if (
-                                            strtolower($sourceTournament->name) == strtolower($tournamentCheck->name) ||
-                                            strtolower($sourceTournament->slug) == strtolower($tournamentCheck->slug)
+                                            isset($autoMapper[$sourceTournament->id]) && $autoMapper[$sourceTournament->id] == $tournamentCheck->id
                                         ) {
                                             $selectedId = $tournamentCheck->id;
                                             $isAutoMapped = true;

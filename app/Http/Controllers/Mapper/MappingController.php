@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Mapper;
 use App\Http\Controllers\Controller;
 use App\Models\BaseModel;
 use App\Models\DataMapping;
+use App\Models\Sport;
+use App\Services\DataImporters\Mappers\CategoryMapper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -25,6 +27,9 @@ class MappingController extends Controller
         $dataA = $modelA::all();
         $dataB = $modelB::all();
 
+        $categoryMapper = new CategoryMapper();
+        $sport = Sport::first();
+        $mapping = $categoryMapper->mapByNames($sport, $dataA->toArray());
         $mappings = DataMapping::where('table_name', $table)->get()->keyBy('source_id');
 
         return view('mapping.index', compact('dataA', 'dataB', 'mappings', 'table'));

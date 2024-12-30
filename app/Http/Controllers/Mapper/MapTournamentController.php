@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\DataMapping;
 use App\Models\Tipster\TournamentTipster;
 use App\Models\Tournament;
+use App\Services\DataImporters\Mappers\TournamentMapper;
 use Illuminate\Http\Request;
 
 class MapTournamentController extends Controller
@@ -39,6 +40,9 @@ class MapTournamentController extends Controller
 
         $category = Category::find($dataMapping->source_id);
 
+        $tournamentMapper = new TournamentMapper();
+        $autoMapper = $tournamentMapper->mapByNames($category, $mapTournament->toArray());
+
         if ($debug) {
             $listA = $sourceTournaments->map(function ($tournament) {
                 return $tournament->name;
@@ -47,45 +51,48 @@ class MapTournamentController extends Controller
                 return $tournament->name;
             })->toArray();
 
-            function suggestTournamentMapping($listA, $listB)
-            {
-                $suggestions = [];
-                foreach ($listB as $aTournament) {
-                    foreach ($listA as $bTournament) {
-                        $similarity = levenshtein(
-                            strtolower($aTournament),
-                            strtolower($bTournament)
-                        );
-                        if ($similarity < 10) { // Prag sličnosti
-                            $suggestions[] = [
-                                'source_a_tournament' => $aTournament,
-                                'source_b_tournament' => $bTournament,
-                                'similarity_score' => $similarity,
-                            ];
-                        }
-                    }
-                }
-
-                return $suggestions;
-            }
-
             // Primer poziva
-            $suggestions = suggestTournamentMapping($listA, $listB);
+            $suggestions = $this->suggestTournamentMapping($listA, $listB);
 
             // Sortirajte predloge prema oceni sličnosti
             usort($suggestions, fn ($a, $b) => $a['similarity_score'] <=> $b['similarity_score']);
             dd($suggestions);
         }
 
+        $autoMapper = array_column($autoMapper, 'id','init_id');
+
         return view('mapping.tournament.mapTournament', compact(
             'sourceTournaments',
             'mapTournament',
             'dataMapping',
             'mappings',
+            'autoMapper',
             'category'
         )
         );
 
+    }
+
+    public function suggestTournamentMapping($listA, $listB)
+    {
+        $suggestions = [];
+        foreach ($listB as $aTournament) {
+            foreach ($listA as $bTournament) {
+                $similarity = levenshtein(
+                    strtolower($aTournament),
+                    strtolower($bTournament)
+                );
+                if ($similarity < 10) { // Prag sličnosti
+                    $suggestions[] = [
+                        'source_a_tournament' => $aTournament,
+                        'source_b_tournament' => $bTournament,
+                        'similarity_score' => $similarity,
+                    ];
+                }
+            }
+        }
+
+        return $suggestions;
     }
 
     public function store(Request $request, DataMapping $dataMapping)
