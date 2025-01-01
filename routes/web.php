@@ -1,11 +1,9 @@
 <?php
 
-use App\Http\Controllers\Mapper\MappingController;
+use App\Http\Controllers\Mapper\MappingCategory;
 use App\Http\Controllers\Mapper\MapSeasonsController;
 use App\Http\Controllers\Mapper\MapTournamentController;
 use App\Http\Controllers\Mapper\MapTournamentSeasonsController;
-use App\Models\Tipster\TournamentTipster;
-use App\Models\Tournament;
 use App\Services\DataImporters\Mappers\FuzzySearch;
 use FuzzyWuzzy\Fuzz;
 use FuzzyWuzzy\Process;
@@ -35,9 +33,15 @@ Route::middleware('auth')->group(function () {
         return 'test';
     });
 
-    Route::get('/mapping/{table}', [MappingController::class, 'index'])->name('mapping.index');
-    Route::post('/mapping/{table}', [MappingController::class, 'store'])->name('mapping.store');
-    Route::post('/mapping/{table}/auto', [MappingController::class, 'autoMap'])->name('mapping.auto');
+    Route::get('/connect', function (){
+        $conn = DB::connection('mysqlSportRadar');
+        $tournamentList = $conn->table('sports')->orderBy('name')->get();
+        return $tournamentList;
+    });
+
+    Route::get('/map/category', [MappingCategory::class, 'index'])->name('mapping.category.index');
+    Route::post('/map/category', [MappingCategory::class, 'store'])->name('mapping.category.store');
+    Route::post('/map/category/auto', [MappingCategory::class, 'autoMap'])->name('mapping.category.auto');
 
     Route::get('/map/tournament', [MapTournamentController::class, 'index'])->name('mapping.tournament.index');
     Route::get('/map/tournament/{dataMapping}/{debug?}', [MapTournamentController::class, 'mapTournament'])->name('mapping.tournament.mapTournament');

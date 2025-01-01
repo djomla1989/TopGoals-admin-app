@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Mapper;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\DataMapping;
+use App\Models\OsSport\CategoryOsSport;
+use App\Models\OsSport\TournamentOsSport;
+use App\Models\SportRadar\TournamentSportRadar;
 use App\Models\Tipster\TournamentTipster;
 use App\Models\Tournament;
 use App\Services\DataImporters\Mappers\TournamentMapper;
@@ -14,12 +17,12 @@ class MapTournamentController extends Controller
 {
     public function index()
     {
-        $allMappedCategories = DataMapping::where('table_name', 'categories')->get()->keyBy('source_id');
+        $allMappedCategories = DataMapping::where('table_name', 'categories')->get()->keyBy('ossport_table_id');
 
         $categoryList = [];
 
         foreach ($allMappedCategories as $mappedCategory) {
-            $category = Category::find($mappedCategory->source_id);
+            $category = CategoryOsSport::find($mappedCategory->ossport_table_id);
             $categoryList[$mappedCategory->id] = $category;
         }
 
@@ -32,16 +35,20 @@ class MapTournamentController extends Controller
             abort(404, 'Mapping not found.');
         }
 
-        $sourceTournaments = Tournament::where('category_id', $dataMapping->source_id)->get();
+        $osSportTournaments = TournamentOsSport::where('category_id', $dataMapping->ossport_table_id)->get();
 
-        $mapTournament = TournamentTipster::where('category_id', $dataMapping->tipster_table_id)->orderBy('name')->get();
+        $allSportsTournaments = Tournament::where('category_id', $dataMapping->allsport_table_id)->orderBy('name')->get();
 
-        $mappings = DataMapping::where('table_name', 'tournaments')->get()->keyBy('source_id');
+        $oddsFeedTournaments = TournamentTipster::where('category_id', $dataMapping->oddsfeed_table_id)->orderBy('name')->get();
 
-        $category = Category::find($dataMapping->source_id);
+        $sportRadarTournaments = TournamentSportRadar::where('category_id', $dataMapping->sportradar_table_id)->orderBy('name')->get();
 
-        $tournamentMapper = new TournamentMapper();
-        $autoMapper = $tournamentMapper->mapByNames($category, $mapTournament->toArray());
+        $mappings = DataMapping::where('table_name', 'tournaments')->get()->keyBy('ossport_table_id');
+
+        $category = Category::find($dataMapping->ossport_table_id);
+
+//        $tournamentMapper = new TournamentMapper();
+//        $autoMapper = $tournamentMapper->mapByNames($category, $mapTournament->toArray());
 
         if ($debug) {
             $listA = $sourceTournaments->map(function ($tournament) {
@@ -59,11 +66,14 @@ class MapTournamentController extends Controller
             dd($suggestions);
         }
 
-        $autoMapper = array_column($autoMapper, 'id','init_id');
+        //$autoMapper = array_column($autoMapper, 'id','init_id');
+        $autoMapper = [];
 
         return view('mapping.tournament.mapTournament', compact(
-            'sourceTournaments',
-            'mapTournament',
+            'osSportTournaments',
+            'allSportsTournaments',
+            'oddsFeedTournaments',
+            'sportRadarTournaments',
             'dataMapping',
             'mappings',
             'autoMapper',
@@ -95,16 +105,26 @@ class MapTournamentController extends Controller
         return $suggestions;
     }
 
-    public function store(Request $request, DataMapping $dataMapping)
+    public function store(Request $request)
     {
         $mappingsInput = $request->input('mapping', []);
 
-        foreach ($mappingsInput as $sourceAId => $sourceBId) {
-            if (! empty($sourceBId)) {
-                DataMapping::updateOrCreate(
-                    ['source_id' => $sourceAId, 'table_name' => 'tournaments'], ['tipster_table_id' => $sourceBId]
-                );
-            }
+        foreach ($mappingsInput['allsport'] as $ossportId => $allsportId) {
+
+            $oddsfeedId = $mappingsInput['oddsfeed'][$ossportId] ?? null;
+            $sportRadarId = $mappingsInput['sportradar'][$ossportId] ?? null;
+
+            DataMapping::updateOrCreate(
+                [
+                    'ossport_table_id' => $ossportId,
+                    'table_name' => 'tournaments'
+                ],
+                [
+                    'allsport_table_id' => $allsportId,
+                    'oddsfeed_table_id' => $oddsfeedId,
+                    'sportradar_table_id' => $sportRadarId
+                ]
+            );
         }
 
         return redirect()->back()->with('success', 'Mapiranja su sačuvana.');

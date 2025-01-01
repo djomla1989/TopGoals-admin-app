@@ -11,8 +11,10 @@ namespace App\Models;
 class DataMapping extends BaseModel
 {
     protected $fillable = [
-        'source_id',
-        'tipster_table_id',
+        'ossport_table_id',
+        'allsport_table_id',
+        'sportradar_table_id',
+        'oddsfeed_table_id',
         'table_name',
     ];
 }

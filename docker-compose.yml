@@ -17,18 +17,20 @@ services:
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            PHP_IDE_CONFIG: 'serverName=Docker'
         volumes:
             - '.:/var/www/html'
         networks:
             - sail
             - shared_network
+            - shared_network_bottled
         depends_on:
-            - mysql
+            - mysql_local
             - redis
             - meilisearch
             - mailpit
             - selenium
-    mysql:
+    mysql_local:
         image: 'mysql/mysql-server:8.0'
         ports:
             - '${FORWARD_DB_PORT:-3308}:3306'
@@ -105,6 +107,8 @@ networks:
     sail:
         driver: bridge
     shared_network:
+        external: true
+    shared_network_bottled:
         external: true
 volumes:
     sail-mysql:

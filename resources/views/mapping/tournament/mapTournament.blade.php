@@ -12,32 +12,31 @@
 
         <form action="{{ route('mapping.tournament.mapTournament', ['dataMapping' => $dataMapping->id]) }}" method="POST">
             @csrf
-            <table class="table-auto w-full border-collapse border border-gray-300">
+            <table class="table-fixed border-collapse border border-slate-400 w-full">
                 <thead>
                 <tr class="bg-gray-200">
-                    <th class="border border-gray-300 px-4 py-2 text-left">Source Tournament</th>
-                    <th class="border border-gray-300 px-4 py-2 text-left">Mapped Tournament</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left w-1/4">OS Sports</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left w-1/4">ALL Sports</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left w-1/4">ODDS FEED</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left w-1/4">Sport Radar</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($sourceTournaments as $sourceTournament)
+                @foreach($osSportTournaments as $osSportTournament)
                     <tr class="odd:bg-white even:bg-gray-100">
-                        <td class="border border-gray-300 px-4 py-2">
-                            {{ $sourceTournament->name }} (ID: {{ $sourceTournament->id }})
+                        <td class="border border-gray-300 px-4 py-2 w-1/4">
+                            {{ $osSportTournament->name }} (ID: {{ $osSportTournament->import_id }})
                         </td>
-                        <td class="border border-gray-300 px-4 py-2">
+                        <td class="border border-gray-300 px-4 py-2 w-1/4">
                             @php
-                                $selectedId = null;
+                                $selectedId = $mappings[$osSportTournament->id]['allsport_table_id'] ?? null;
                                 $isAutoMapped = false;
 
-                                if (isset($mappings[$sourceTournament->id])) {
-                                    // Postoji postojeće mapiranje
-                                    $selectedId = $mappings[$sourceTournament->id]->tipster_table_id;
-                                } else {
-                                    // Proveri da li postoji automatsko mapiranje
-                                    foreach ($mapTournament as $tournamentCheck) {
-                                        if (
-                                            isset($autoMapper[$sourceTournament->id]) && $autoMapper[$sourceTournament->id] == $tournamentCheck->id
+                                if ($selectedId === null) {
+                                    foreach($allSportsTournaments as $tournamentCheck) {
+                                        if(
+                                            strtolower($osSportTournament->name) == strtolower($tournamentCheck->name) ||
+                                            strtolower($osSportTournament->slug) == strtolower($tournamentCheck->slug)
                                         ) {
                                             $selectedId = $tournamentCheck->id;
                                             $isAutoMapped = true;
@@ -47,21 +46,97 @@
                                 }
                             @endphp
 
-                            <select name="mapping[{{ $sourceTournament->id }}]" class="form-select block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <select name="mapping[allsport][{{ $osSportTournament->id }}]" class="searchable-select" style="width: 85%">
                                 <option value="">-- Select Tournament --</option>
-                                @foreach($mapTournament as $tournament)
-                                    <option value="{{ $tournament->id }}"
-                                            @if($selectedId == $tournament->id)
+                                @foreach($allSportsTournaments as $allSportstournament)
+                                    <option value="{{ $allSportstournament->id }}"
+                                            @if($selectedId == $allSportstournament->id)
                                                 selected
                                         @endif
                                     >
-                                        {{ $tournament->name }} (ID: {{ $tournament->id }})
+                                        {{ $allSportstournament->name }} (ID: {{ $allSportstournament->import_id }})
                                     </option>
                                 @endforeach
                             </select>
 
                             @if($isAutoMapped)
-                                <span class="text-red-500 text-sm">Auto-mapped</span>
+                                <span class="text-red-500 text-sm">Auto</span>
+                            @endif
+                        </td>
+
+                        <td class="border border-gray-300 px-4 py-2 w-1/4">
+                            @php
+                                $selectedIdOddsFeed = $mappings[$osSportTournament->id]['oddsfeed_table_id'] ?? null;
+                                $isAutoMapped = false;
+
+                                if ($selectedIdOddsFeed === null) {
+                                    foreach($oddsFeedTournaments as $tournamentCheck) {
+                                        if(
+                                            strtolower($osSportTournament->name) == strtolower($tournamentCheck->name) ||
+                                            strtolower($osSportTournament->slug) == strtolower($tournamentCheck->slug)
+                                        ) {
+                                            $selectedIdOddsFeed = $tournamentCheck->id;
+                                            $isAutoMapped = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            @endphp
+
+                            <select name="mapping[oddsfeed][{{ $osSportTournament->id }}]" class="searchable-select" style="width: 85%">
+                                <option value="">-- Select Tournament --</option>
+                                @foreach($oddsFeedTournaments as $oddsFeedTournament)
+                                    <option value="{{ $oddsFeedTournament->id }}"
+                                            @if($selectedIdOddsFeed == $oddsFeedTournament->id)
+                                                selected
+                                        @endif
+                                    >
+                                        {{ $oddsFeedTournament->name }} (ID: {{ $oddsFeedTournament->import_id }})
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @if($isAutoMapped)
+                                <span class="text-red-500 text-sm">Auto</span>
+                            @endif
+                        </td>
+
+                        <td class="border border-gray-300 px-4 py-2 w-1/4">
+                            @php
+                                $selectedIdSportRadar = $mappings[$osSportTournament->id]['sportradar_table_id'] ?? null;
+                                $isAutoMapped = false;
+
+                                if ($selectedIdSportRadar === null) {
+                                    foreach($sportRadarTournaments as $tournamentCheck) {
+                                        if(
+                                            strtolower($osSportTournament->name) == strtolower($tournamentCheck->name) ||
+                                            strtolower($osSportTournament->slug) == strtolower($tournamentCheck->slug)
+                                        ) {
+                                            $selectedIdSportRadar = $tournamentCheck->id;
+                                            $isAutoMapped = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            @endphp
+
+                            <select name="mapping[sportradar][{{ $osSportTournament->id }}]" class="searchable-select" style="width: 85%">
+                                <option value="">-- Select Tournament --</option>
+                                @foreach($sportRadarTournaments as $sportRadarTournament)
+                                    <option value="{{ $sportRadarTournament->id }}"
+                                            @if($selectedIdSportRadar == $sportRadarTournament->id)
+                                                selected
+                                        @endif
+                                    >
+                                        {{ $sportRadarTournament->name }} (ID: {{ $sportRadarTournament->import_id }})
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @if($isAutoMapped)
+                                <span class="text-red-500 text-sm">Auto</span>
                             @endif
                         </td>
                     </tr>

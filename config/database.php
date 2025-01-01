@@ -133,6 +133,36 @@ return [
                 'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'),
             ],
         ],
+        'mongodbOsSport' => [
+            'driver' => 'mongodb',
+            'host' => env('MONGO_DB_HOST'),
+            'port' => env('MONGO_DB_PORT'),
+            'database' => env('MONGO_DB_DATABASE_OS_SPORT'),
+            'username' => env('MONGO_DB_USERNAME'),
+            'password' => env('MONGO_DB_PASSWORD'),
+            'options' => [
+                'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'),
+            ],
+        ],
+        'mysqlSportRadar' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL'),
+            'host' => env('DB_HOST_BOTTLED', '127.0.0.1'),
+            'port' => env('DB_PORT_BOTTLED', '3306'),
+            'database' => env('DB_DATABASE_BOTTLED', 'laravel'),
+            'username' => env('DB_USERNAME_BOTTLED', 'root'),
+            'password' => env('DB_PASSWORD_BOTTLED', ''),
+            'unix_socket' => env('DB_SOCKET_BOTTLED', ''),
+            'charset' => env('DB_CHARSET_BOTTLED', 'utf8mb4'),
+            'collation' => env('DB_COLLATION_BOTTLED', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
 
     ],
 

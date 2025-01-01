@@ -2,7 +2,7 @@ name: Docker Build and Deploy
 on:
   push:
     branches:
-      - TG-14-Import-Sports-from-Tipster
+      - TG-16-Os-Sport-Import
 
 jobs:
   build-and-deploy:
