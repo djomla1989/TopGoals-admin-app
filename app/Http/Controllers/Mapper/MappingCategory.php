@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Mapper;
 
 use App\Http\Controllers\Controller;
-use App\Models\BaseModel;
-use App\Models\Category;
 use App\Models\DataMapping;
+use App\Models\Category;
 use App\Models\OsSport\CategoryOsSport;
 use App\Models\SportRadar\CategorySportRadar;
 use App\Models\Tipster\CategoryTipster;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class MappingCategory extends Controller
@@ -18,35 +18,133 @@ class MappingCategory extends Controller
     {
         $table = 'categories';
 
-        $dataOsSports = CategoryOsSport::all();
-        $dataAllSports = Category::all();
-        $dataOddsFeed = CategoryTipster::all();
-        $dataSportRadar = CategorySportRadar::orderBy('name')->get();
+        // Sve podatke dohvatamo odjednom
+        $dataOsSports   = CategoryOsSport::all();          // ~200
+        $dataAllSports  = Category::all();                 // ~200
+        $dataOddsFeed   = CategoryTipster::all();          // ~200
+        $dataSportRadar = CategorySportRadar::orderBy('name')->get(); // ~200
 
-
-
-//        $sport = Sport::first();
-//        $categoryMapper = new CategoryMapper();
-//        $mapping = $categoryMapper->mapByNames($sport, $dataA->toArray());
+        // Dohvatimo postojeća mapiranja
+        // keyBy('ossport_table_id') da bismo ih lako pristupili kasnije
         $mappings = DataMapping::where('table_name', $table)->get()->keyBy('ossport_table_id');
+
+        /**
+         * 1) Napravimo MAP-e za brze provere.
+         *    Na primer, $allSportsMapByName['tenis'] = Category(ID=123)
+         *    Ovo vam omogućava da u O(1) pronađete da li postoji Category sa name/slug 'tenis'.
+         */
+        $allSportsMapByName = $dataAllSports->keyBy(function($item) {
+            return strtolower($item->name);
+        });
+        $allSportsMapBySlug = $dataAllSports->keyBy(function($item) {
+            return strtolower($item->slug);
+        });
+
+        $oddsFeedMapByName = $dataOddsFeed->keyBy(function($item) {
+            return strtolower($item->name);
+        });
+        $oddsFeedMapBySlug = $dataOddsFeed->keyBy(function($item) {
+            return strtolower($item->slug);
+        });
+
+        $sportRadarMapByName = $dataSportRadar->keyBy(function($item) {
+            return strtolower($item->name);
+        });
+        $sportRadarMapBySlug = $dataSportRadar->keyBy(function($item) {
+            return strtolower($item->slug);
+        });
+
+        /**
+         * 2) Prođemo kroz svaki OS Sport i pripremimo sve što treba za prikaz u Blade-u.
+         *    Umesto da radimo "if (nema) { foreach(...) }", ovde sve rešavamo lookup-om u Mapi.
+         */
+        $mappedData = [];
+
+        foreach ($dataOsSports as $osSport) {
+
+            $selectedAllSports    = $mappings[$osSport->id]['allsport_table_id']    ?? null;
+            $selectedOddsFeed     = $mappings[$osSport->id]['oddsfeed_table_id']    ?? null;
+            $selectedSportRadar   = $mappings[$osSport->id]['sportradar_table_id']  ?? null;
+
+            $isAutoMappedAllSports  = false;
+            $isAutoMappedOddsFeed   = false;
+            $isAutoMappedSportRadar = false;
+
+            // Ako nije ručno mapirano, pokušavamo auto-map:
+            if (is_null($selectedAllSports)) {
+                $name = strtolower($osSport->name);
+                $slug = strtolower($osSport->slug);
+
+                if (isset($allSportsMapByName[$name])) {
+                    $selectedAllSports = $allSportsMapByName[$name]->id;
+                    $isAutoMappedAllSports = true;
+                } elseif (isset($allSportsMapBySlug[$slug])) {
+                    $selectedAllSports = $allSportsMapBySlug[$slug]->id;
+                    $isAutoMappedAllSports = true;
+                }
+            }
+
+            if (is_null($selectedOddsFeed)) {
+                $name = strtolower($osSport->name);
+                $slug = strtolower($osSport->slug);
+
+                if (isset($oddsFeedMapByName[$name])) {
+                    $selectedOddsFeed = $oddsFeedMapByName[$name]->id;
+                    $isAutoMappedOddsFeed = true;
+                } elseif (isset($oddsFeedMapBySlug[$slug])) {
+                    $selectedOddsFeed = $oddsFeedMapBySlug[$slug]->id;
+                    $isAutoMappedOddsFeed = true;
+                }
+            }
+
+            if (is_null($selectedSportRadar)) {
+                $name = strtolower($osSport->name);
+                $slug = strtolower($osSport->slug);
+
+                if (isset($sportRadarMapByName[$name])) {
+                    $selectedSportRadar = $sportRadarMapByName[$name]->id;
+                    $isAutoMappedSportRadar = true;
+                } elseif (isset($sportRadarMapBySlug[$slug])) {
+                    $selectedSportRadar = $sportRadarMapBySlug[$slug]->id;
+                    $isAutoMappedSportRadar = true;
+                }
+            }
+
+            // Ubacimo sve za jedan red u $mappedData
+            $mappedData[] = [
+                'osSport'                 => $osSport,
+                'selectedAllSports'       => $selectedAllSports,
+                'selectedOddsFeed'        => $selectedOddsFeed,
+                'selectedSportRadar'      => $selectedSportRadar,
+                'isAutoMappedAllSports'   => $isAutoMappedAllSports,
+                'isAutoMappedOddsFeed'    => $isAutoMappedOddsFeed,
+                'isAutoMappedSportRadar'  => $isAutoMappedSportRadar,
+            ];
+        }
+
+        /**
+         * 3) Prosledimo "obrađeni" $mappedData u view, zajedno sa listama
+         *    (za generisanje <option> u <select>) i mapama.
+         */
         return view('mapping.category', compact(
-            'dataOsSports',
-            'dataOddsFeed',
+            'mappedData',
             'dataAllSports',
+            'dataOddsFeed',
             'dataSportRadar',
             'mappings',
-            'table')
-        );
+            'table'
+        ));
     }
 
+    /**
+     * Cuvanje mapiranja ostaje isto.
+     */
     public function store(Request $request)
     {
         $mappingsInput = $request->input('mapping', []);
 
         foreach ($mappingsInput['allsport'] as $ossportId => $allsportId) {
-
-            $oddsfeedId = $mappingsInput['oddsfeed'][$ossportId] ?? null;
-
+            $oddsfeedId   = $mappingsInput['oddsfeed'][$ossportId] ?? null;
             $sportradarId = $mappingsInput['sportradar'][$ossportId] ?? null;
 
             DataMapping::updateOrCreate(
@@ -55,16 +153,21 @@ class MappingCategory extends Controller
                     'table_name' => 'categories'
                 ],
                 [
-                    'allsport_table_id' => $allsportId,
-                    'oddsfeed_table_id' => $oddsfeedId,
+                    'allsport_table_id'   => $allsportId,
+                    'oddsfeed_table_id'   => $oddsfeedId,
                     'sportradar_table_id' => $sportradarId
                 ]
             );
         }
 
+        Session::flash('message', 'Category mapping saved.');
         return redirect()->back()->with('success', 'Mapiranja su sačuvana.');
     }
 
+    /**
+     * Primer autoMap metode – ostaje nepromenjeno,
+     * ili prepravite po želji.
+     */
     public function autoMap(string $table)
     {
         /** @var BaseModel $modelA */

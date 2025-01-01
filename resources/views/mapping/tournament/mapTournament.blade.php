@@ -3,7 +3,7 @@
 @section('title', 'Map Tournaments')
 
 @section('content')
-    <div class="bg-white shadow-md rounded-lg p-6">
+    <div class="bg-white shadow-md rounded-lg p-6 mx-auto">
         <h1 class="text-xl font-bold mb-4">Map Tournaments: <span class="underline"> {{$category->name}} </span></h1>
 
         <span class="text-blue-600">
@@ -145,5 +145,24 @@
             </table>
             <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save Mappings</button>
         </form>
+        @if(Session::has('message'))
+            <p class="alert text-red-500 text-sm" {{ Session::get('alert-class', 'alert-info') }}">
+            {{ Session::get('message') }}
+            </p>
+        @endif
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const submitBtn = form.querySelector('button[type="submit"]');
+
+            form.addEventListener('submit', function () {
+                submitBtn.disabled = true;
+                submitBtn.innerText = 'Submitting...';
+            });
+        });
+    </script>
 @endsection

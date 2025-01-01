@@ -12,6 +12,7 @@ use App\Models\Tipster\TournamentTipster;
 use App\Models\Tournament;
 use App\Services\DataImporters\Mappers\TournamentMapper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class MapTournamentController extends Controller
 {
@@ -126,6 +127,8 @@ class MapTournamentController extends Controller
                 ]
             );
         }
+
+        Session::flash('message', 'Tournament mapping saved.');
 
         return redirect()->back()->with('success', 'Mapiranja su sačuvana.');
     }

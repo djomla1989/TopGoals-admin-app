@@ -16,6 +16,7 @@
     @yield('content')
 </main>
 <footer class="bg-gray-800 text-white py-4 mt-6">
+    @yield('scripts')
     <div class="container mx-auto text-center">
         &copy; {{ date('Y') }} My Laravel App. All rights reserved.
     </div>
