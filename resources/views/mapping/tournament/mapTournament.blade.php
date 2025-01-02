@@ -130,7 +130,7 @@
                                                 selected
                                         @endif
                                     >
-                                        {{ $sportRadarTournament->name }} (ID: {{ $sportRadarTournament->import_id }})
+                                        {{ $sportRadarTournament->name }} (ID: {{ preg_replace('/\D/', '',$sportRadarTournament->import_id) }})
                                     </option>
                                 @endforeach
                             </select>

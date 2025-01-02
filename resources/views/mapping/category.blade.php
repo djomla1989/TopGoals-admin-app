@@ -66,7 +66,7 @@
                             @foreach($dataSportRadar as $sportRadar)
                                 <option value="{{ $sportRadar->id }}"
                                         @if($row['selectedSportRadar'] == $sportRadar->id) selected @endif>
-                                    {{ $sportRadar->name }} - `{{$sportRadar->slug}}` (ID: {{ $sportRadar->import_id }})
+                                    {{ $sportRadar->name }} - `{{$sportRadar->slug}}` (ID: {{ preg_replace('/\D/', '',$sportRadar->import_id) }})
                                 </option>
                             @endforeach
                         </select>
