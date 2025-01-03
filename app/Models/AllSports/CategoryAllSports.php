@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\AllSports;
+
+use App\Models\BaseModel;
 
 /**
  * @property int import_id
@@ -10,8 +12,10 @@ namespace App\Models;
  * @property int priority
  * @property string image
  */
-class Category extends BaseModel
+class CategoryAllSports extends BaseModel
 {
+    protected $table = 'categories_allsports';
+
     protected $fillable = [
         'import_id',
         'name',

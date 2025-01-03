@@ -2,9 +2,9 @@
 
 namespace App\Jobs\Mapper;
 
+use App\Models\AllSports\TournamentSeasonAllSports;
 use App\Models\DataMapping;
 use App\Models\Tipster\TournamentSeasonsTipster;
-use App\Models\TournamentSeason;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +22,7 @@ class MapSeasonJob implements ShouldQueue
             abort(404, 'Mapping not found.');
         }
 
-        $sourceSeasons = TournamentSeason::where('tournament_id', $dataMapping->source_id)->get();
+        $sourceSeasons = TournamentSeasonAllSports::where('tournament_id', $dataMapping->source_id)->get();
 
         $mapSeason = TournamentSeasonsTipster::where('tournament_id', $dataMapping->tipster_table_id)->orderBy('name')->get();
 

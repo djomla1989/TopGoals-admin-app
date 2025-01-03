@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Team;
-use App\Models\TournamentSeason;
-use App\Models\TournamentSeasonNextEvent;
+use App\Models\AllSports\TeamAllSports;
+use App\Models\AllSports\TournamentSeasonAllSports;
+use App\Models\AllSports\TournamentSeasonNextEventAllSports;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TournamentSeasonNextEvent>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AllSports\TournamentSeasonNextEventAllSports>
  */
 class TournamentSeasonNextEventFactory extends Factory
 {
@@ -25,12 +25,12 @@ class TournamentSeasonNextEventFactory extends Factory
     }
 
     public static function buildArrayFromNextEvent(
-        \stdClass $nextEvent,
-        TournamentSeason $tournamentSeason,
-        int $tournamentSeasonGroupId,
-        Team $homeTeam,
-        Team $awayTeam,
-        ?TournamentSeasonNextEvent $existingNextEvent = null
+        \stdClass                  $nextEvent,
+        TournamentSeasonAllSports  $tournamentSeason,
+        int                        $tournamentSeasonGroupId,
+        TeamAllSports              $homeTeam,
+        TeamAllSports              $awayTeam,
+        ?TournamentSeasonNextEventAllSports $existingNextEvent = null
     ): array {
 
         $data = [

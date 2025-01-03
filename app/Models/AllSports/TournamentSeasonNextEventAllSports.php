@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\AllSports;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -20,14 +21,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int sport_id
  * @property int round
  * @property string status
- * @property Tournament tournament
- * @property TournamentSeason tournamentSeason
- * @property Team homeTeam
- * @property Team awayTeam
- * @property Category category
+ * @property TournamentAllSports tournament
+ * @property TournamentSeasonAllSports tournamentSeason
+ * @property TeamAllSports homeTeam
+ * @property TeamAllSports awayTeam
+ * @property CategoryAllSports category
  */
-class TournamentSeasonNextEvent extends BaseModel
+class TournamentSeasonNextEventAllSports extends BaseModel
 {
+    protected $table = 'tournament_season_next_events_allsports';
+
     protected $fillable = [
         'customId',
         'slug',
@@ -47,31 +50,31 @@ class TournamentSeasonNextEvent extends BaseModel
 
     public function tournament(): BelongsTo
     {
-        return $this->belongsTo(Tournament::class);
+        return $this->belongsTo(TournamentAllSports::class);
     }
 
     public function tournamentSeason(): BelongsTo
     {
-        return $this->belongsTo(TournamentSeason::class);
+        return $this->belongsTo(TournamentSeasonAllSports::class);
     }
 
     public function tournamentSeasonGroup(): BelongsTo
     {
-        return $this->belongsTo(TournamentSeasonGroup::class);
+        return $this->belongsTo(TournamentSeasonGroupAllSports::class);
     }
 
     public function homeTeam(): BelongsTo
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(TeamAllSports::class);
     }
 
     public function awayTeam(): BelongsTo
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(TeamAllSports::class);
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(CategoryAllSports::class);
     }
 }

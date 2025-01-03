@@ -2,7 +2,7 @@
 
 namespace App\Services\DataImporters\Mappers;
 
-use App\Models\Team;
+use App\Models\AllSports\TeamAllSports;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +11,7 @@ class TournamentTeamPlayersMapper extends AbstractModelMapper implements ModelMa
     const SIMILARITY_THRESHOLD = 60;
     const BIRTHDAY_SIMILARITY_INCREMENT = 30;
     /**
-     * @param Team $model
+     * @param TeamAllSports $model
      * @param array $data
      * @return array
      */
@@ -55,7 +55,7 @@ class TournamentTeamPlayersMapper extends AbstractModelMapper implements ModelMa
         return $nameSimilarity;
     }
 
-    protected function getPlayerList(Team $model): array
+    protected function getPlayerList(TeamAllSports $model): array
     {
         return $model->players->mapWithKeys(fn($player) => [$player->id => [
             'name' => $player->name,
@@ -65,7 +65,7 @@ class TournamentTeamPlayersMapper extends AbstractModelMapper implements ModelMa
 
     public function supportsModel(Model $model): bool
     {
-        return $model instanceof Team;
+        return $model instanceof TeamAllSports;
     }
 
     function extractBirthdateToTimestamp(string $input): ?int

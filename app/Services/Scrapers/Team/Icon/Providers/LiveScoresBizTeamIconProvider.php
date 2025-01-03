@@ -2,16 +2,15 @@
 
 namespace App\Services\Scrapers\Team\Icon\Providers;
 
-use App\Models\Team;
+use App\Models\AllSports\TeamAllSports;
 use App\Services\Scrapers\IconProviderInterface;
 use App\Services\Scrapers\ImageScraperServiceInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Client\Factory as HttpClient;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
- * @implements IconProviderInterface<Team>
+ * @implements IconProviderInterface<TeamAllSports>
  */
 class LiveScoresBizTeamIconProvider implements IconProviderInterface
 {
@@ -25,7 +24,7 @@ class LiveScoresBizTeamIconProvider implements IconProviderInterface
     public function fetchIconUrl(Model $model): ?string
     {
         try {
-            /** @var Team $team */
+            /** @var TeamAllSports $team */
             $team = $model;
             $sport = $team->sport->id;
             $slug = $team->slug;

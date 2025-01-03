@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Mapper;
 
 use App\Http\Controllers\Controller;
+use App\Models\AllSports\TournamentAllSports;
+use App\Models\AllSports\TournamentSeasonAllSports;
 use App\Models\DataMapping;
 use App\Models\Tipster\TournamentSeasonsTipster;
-use App\Models\Tournament;
-use App\Models\TournamentSeason;
 use Illuminate\Http\Request;
 
 class MapTournamentSeasonsController extends Controller
@@ -18,7 +18,7 @@ class MapTournamentSeasonsController extends Controller
         $tournamentList = [];
 
         foreach ($allMappedTournaments as $mappedTournament) {
-            $tournament = Tournament::find($mappedTournament->source_id);
+            $tournament = TournamentAllSports::find($mappedTournament->source_id);
             $hasSeasons = TournamentSeasonsTipster::where('tournament_id', $mappedTournament->tipster_table_id)->exists();
             if ($hasSeasons === false) {
                 continue;
@@ -35,13 +35,13 @@ class MapTournamentSeasonsController extends Controller
             abort(404, 'Mapping not found.');
         }
 
-        $sourceSeasons = TournamentSeason::where('tournament_id', $dataMapping->source_id)->get();
+        $sourceSeasons = TournamentSeasonAllSports::where('tournament_id', $dataMapping->source_id)->get();
 
         $mapSeason = TournamentSeasonsTipster::where('tournament_id', $dataMapping->tipster_table_id)->orderBy('name')->get();
 
         $mappings = DataMapping::where('table_name', 'seasons')->get()->keyBy('source_id');
 
-        $tournament = Tournament::find($dataMapping->source_id);
+        $tournament = TournamentAllSports::find($dataMapping->source_id);
 
         if ($debug) {
             $listA = $sourceSeasons->map(function ($season) {

@@ -2,14 +2,14 @@
 
 namespace App\Services\DataImporters\Mappers;
 
-use App\Models\Category;
-use App\Models\Sport;
+use App\Models\AllSports\CategoryAllSports;
+use App\Models\AllSports\SportAllSports;
 use Illuminate\Database\Eloquent\Model;
 
 class CategoryMapper extends AbstractModelMapper implements ModelMapperInterface
 {
     /**
-     * @param Sport $model
+     * @param SportAllSports $model
      * @param array $data
      * @return array
      */
@@ -28,11 +28,11 @@ class CategoryMapper extends AbstractModelMapper implements ModelMapperInterface
 
     protected function getCategotyList(): array
     {
-        return Category::all()->mapWithKeys(fn($team) => [$team->id => $team->name])->toArray();
+        return CategoryAllSports::all()->mapWithKeys(fn($team) => [$team->id => $team->name])->toArray();
     }
 
     public function supportsModel(Model $model): bool
     {
-        return $model instanceof Sport;
+        return $model instanceof SportAllSports;
     }
 }

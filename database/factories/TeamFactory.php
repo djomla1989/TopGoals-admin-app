@@ -3,11 +3,11 @@
 namespace Database\Factories;
 
 use App\Enums\Gender;
-use App\Models\Team;
+use App\Models\AllSports\TeamAllSports;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Team>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AllSports\TeamAllSports>
  */
 class TeamFactory extends Factory
 {
@@ -24,13 +24,13 @@ class TeamFactory extends Factory
     }
 
     public static function buildFromTeam(
-        \stdClass $team,
-        int $sportId,
-        int $categoryId,
-        ?int $primaryTournamentId,
-        ?Team $existingTeam = null,
-    ): Team {
-        $teamModel = $existingTeam ?? new Team;
+        \stdClass      $team,
+        int            $sportId,
+        int            $categoryId,
+        ?int           $primaryTournamentId,
+        ?TeamAllSports $existingTeam = null,
+    ): TeamAllSports {
+        $teamModel = $existingTeam ?? new TeamAllSports;
 
         $teamModel->import_id = $team->id;
         $teamModel->name = $team->name;

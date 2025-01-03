@@ -4,9 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Enums\DateEnum;
 use App\Filament\Resources\TournamentSeasonNextEventResource\Pages;
-use App\Models\Category;
-use App\Models\Tournament;
-use App\Models\TournamentSeasonNextEvent;
+use App\Models\AllSports\CategoryAllSports;
+use App\Models\AllSports\TournamentAllSports;
+use App\Models\AllSports\TournamentSeasonNextEventAllSports;
 use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TournamentSeasonNextEventResource extends Resource
 {
-    protected static ?string $model = TournamentSeasonNextEvent::class;
+    protected static ?string $model = TournamentSeasonNextEventAllSports::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -111,7 +111,7 @@ class TournamentSeasonNextEventResource extends Resource
                     ->label('Custom')
                     ->form([
                             Forms\Components\Select::make('category')
-                                ->options(fn () => Category::pluck('name', 'id')->toArray())
+                                ->options(fn () => CategoryAllSports::pluck('name', 'id')->toArray())
                                 ->preload()
                                 ->live()
                                 ->reactive()
@@ -125,10 +125,10 @@ class TournamentSeasonNextEventResource extends Resource
                                     $category = $get('category');
 
                                     if (! empty($category)) {
-                                        return Tournament::query()->where('category_id', $category)->pluck('name', 'id')->toArray();
+                                        return TournamentAllSports::query()->where('category_id', $category)->pluck('name', 'id')->toArray();
                                     }
 
-                                    return Tournament::query()->pluck('name', 'id')->toArray();
+                                    return TournamentAllSports::query()->pluck('name', 'id')->toArray();
                                 })
                                 ->label('Primary Tournament')
                                 ->preload()
@@ -153,12 +153,12 @@ class TournamentSeasonNextEventResource extends Resource
 
                         if ($data['category'] ?? null) {
 
-                            $indicators[] = Tables\Filters\Indicator::make('Category: '.Category::find($data['category'])->name)
+                            $indicators[] = Tables\Filters\Indicator::make('Category: '.CategoryAllSports::find($data['category'])->name)
                                 ->removeField('category');
                         }
 
                         if ($data['tournament'] ?? null) {
-                            $indicators[] = Tables\Filters\Indicator::make('Primary tournament: '.Tournament::find($data['tournament'])->name)
+                            $indicators[] = Tables\Filters\Indicator::make('Primary tournament: '.TournamentAllSports::find($data['tournament'])->name)
                                 ->removeField('tournament');
                         }
 

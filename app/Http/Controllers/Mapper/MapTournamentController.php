@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Mapper;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\AllSports\CategoryAllSports;
+use App\Models\AllSports\TournamentAllSports;
 use App\Models\DataMapping;
 use App\Models\OsSport\CategoryOsSport;
 use App\Models\OsSport\TournamentOsSport;
+use App\Models\SportRadar\CategorySportRadar;
 use App\Models\SportRadar\TournamentSportRadar;
+use App\Models\Tipster\CategoryTipster;
 use App\Models\Tipster\TournamentTipster;
-use App\Models\Tournament;
-use App\Services\DataImporters\Mappers\TournamentMapper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -23,7 +24,7 @@ class MapTournamentController extends Controller
         $categoryList = [];
 
         foreach ($allMappedCategories as $mappedCategory) {
-            $category = CategoryOsSport::find($mappedCategory->ossport_table_id);
+            $category = CategoryOsSport::query()->where('import_id', $mappedCategory->ossport_table_id)->first();
             $categoryList[$mappedCategory->id] = $category;
         }
 
@@ -36,17 +37,31 @@ class MapTournamentController extends Controller
             abort(404, 'Mapping not found.');
         }
 
-        $osSportTournaments = TournamentOsSport::where('category_id', $dataMapping->ossport_table_id)->get();
+        $osSportTournaments = [];
+        $oddsFeedTournaments = [];
+        $sportRadarTournaments = [];
+        $sportRadarTournaments = [];
 
-        $allSportsTournaments = Tournament::where('category_id', $dataMapping->allsport_table_id)->orderBy('name')->get();
+        $osSportCategories = CategoryOsSport::query()->where('import_id', $dataMapping->ossport_table_id)->first();
+        $osSportTournaments = TournamentOsSport::where('category_id', $osSportCategories->id)->get();
 
-        $oddsFeedTournaments = TournamentTipster::where('category_id', $dataMapping->oddsfeed_table_id)->orderBy('name')->get();
+        if(!empty($dataMapping->allsport_table_id)) {
+            $allSportCategories = CategoryAllSports::query()->where('import_id', $dataMapping->allsport_table_id)->first();
+            $allSportsTournaments = TournamentAllSports::where('category_id', $allSportCategories->id)->orderBy('name')->get();
+        }
+        if (!empty($dataMapping->oddsfeed_table_id)) {
+            $oddFeedCategory = CategoryTipster::query()->where('import_id', $dataMapping->oddsfeed_table_id)->first();
+            $oddsFeedTournaments = TournamentTipster::where('category_id', $oddFeedCategory->id)->orderBy('name')->get();
+        }
 
-        $sportRadarTournaments = TournamentSportRadar::where('category_id', $dataMapping->sportradar_table_id)->orderBy('name')->get();
+        if (!empty($dataMapping->sportradar_table_id)) {
+            $sportRadarCategory = CategorySportRadar::query()->where('import_id', $dataMapping->sportradar_table_id)->first();
+            $sportRadarTournaments = TournamentSportRadar::where('category_id', $sportRadarCategory->id)->orderBy('name')->get();
+        }
 
         $mappings = DataMapping::where('table_name', 'tournaments')->get()->keyBy('ossport_table_id');
 
-        $category = Category::find($dataMapping->ossport_table_id);
+        $category = $osSportCategories;
 
 //        $tournamentMapper = new TournamentMapper();
 //        $autoMapper = $tournamentMapper->mapByNames($category, $mapTournament->toArray());

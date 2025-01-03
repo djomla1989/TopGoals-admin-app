@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Category;
+use App\Models\AllSports\CategoryAllSports;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AllSports\CategoryAllSports>
  */
 class CategoryFactory extends Factory
 {
@@ -22,12 +22,12 @@ class CategoryFactory extends Factory
         ];
     }
 
-    public static function buildFromCategory(\stdClass $category, ?Category $existingCategory = null): Category
+    public static function buildFromCategory(\stdClass $category, ?CategoryAllSports $existingCategory = null): CategoryAllSports
     {
         if ($existingCategory) {
             $categoryModel = $existingCategory;
         } else {
-            $categoryModel = new Category;
+            $categoryModel = new CategoryAllSports;
         }
 
         $categoryModel->name = $category->name;
@@ -38,7 +38,7 @@ class CategoryFactory extends Factory
         return $categoryModel;
     }
 
-    public static function buildFromNextEvent(\stdClass $event): Category
+    public static function buildFromNextEvent(\stdClass $event): CategoryAllSports
     {
         return CategoryFactory::buildFromCategory($event->tournament->category);
     }

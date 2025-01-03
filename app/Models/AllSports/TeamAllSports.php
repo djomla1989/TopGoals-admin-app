@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\AllSports;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -19,8 +20,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string image
  * @property string primary_color
  */
-class Team extends BaseModel
+class TeamAllSports extends BaseModel
 {
+    protected $table = 'teams_allsports';
+
     protected $fillable = [
         'import_id',
         'name',
@@ -38,16 +41,16 @@ class Team extends BaseModel
 
     public function sport(): BelongsTo
     {
-        return $this->belongsTo(Sport::class);
+        return $this->belongsTo(SportAllSports::class);
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(CategoryAllSports::class);
     }
 
     public function primaryTournament(): BelongsTo
     {
-        return $this->belongsTo(Tournament::class, 'primary_tournament_id');
+        return $this->belongsTo(TournamentAllSports::class, 'primary_tournament_id');
     }
 }

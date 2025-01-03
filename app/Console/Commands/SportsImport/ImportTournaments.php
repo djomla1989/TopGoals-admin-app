@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands\SportsImport;
 
-use App\Models\Category;
-use App\Models\Sport;
-use App\Models\Tournament;
+use App\Models\AllSports\CategoryAllSports;
+use App\Models\AllSports\SportAllSports;
+use App\Models\AllSports\TournamentAllSports;
 use Database\Factories\TournamentFactory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -39,7 +39,7 @@ class ImportTournaments extends Command
             $liveMode = false;
         }
 
-        $sport = Sport::where('name', 'Football')->first();
+        $sport = SportAllSports::where('name', 'Football')->first();
         if (! $sport) {
             $this->error('Sport "Football" not found. Please import sports first.');
 
@@ -50,7 +50,7 @@ class ImportTournaments extends Command
             $tournament = (object) $tournament;
 
             $this->info("Importing category: {$tournament->name} - {$tournament->id}");
-            $existingTournament = Tournament::where('import_id', $tournament->id)->first();
+            $existingTournament = TournamentAllSports::where('import_id', $tournament->id)->first();
 
             if ($existingTournament && ! $this->option('overwrite')) {
                 $this->info("Tournament {$tournament->name} already exists. Use --overwrite to update.");
@@ -64,7 +64,7 @@ class ImportTournaments extends Command
                 continue;
             }
 
-            $category = Category::where('import_id', $tournament->category['id'])->first();
+            $category = CategoryAllSports::where('import_id', $tournament->category['id'])->first();
 
             if (! $category) {
                 $this->error("Country {$tournament->name} does not have a category_id. Skipping.");

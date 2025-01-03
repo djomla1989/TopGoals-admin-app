@@ -2,13 +2,13 @@
 
 namespace App\Services\DataImporters\Mappers;
 
-use App\Models\Tournament;
+use App\Models\AllSports\TournamentAllSports;
 use Illuminate\Database\Eloquent\Model;
 
 class TournamentTeamMapper extends AbstractModelMapper implements ModelMapperInterface
 {
     /**
-     * @param Tournament $model
+     * @param TournamentAllSports $model
      * @param array $data
      * @return array
      */
@@ -25,13 +25,13 @@ class TournamentTeamMapper extends AbstractModelMapper implements ModelMapperInt
         return $this->mapTeams($priorityList, $teamList, $data);
     }
 
-    protected function getTeamList(Tournament $model): array
+    protected function getTeamList(TournamentAllSports $model): array
     {
         return $model->teams->mapWithKeys(fn($team) => [$team->id => $team->name])->toArray();
     }
 
     public function supportsModel(Model $model): bool
     {
-        return $model instanceof Tournament;
+        return $model instanceof TournamentAllSports;
     }
 }

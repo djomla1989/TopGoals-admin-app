@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\SportsImport;
 
-use App\Models\Sport;
+use App\Models\AllSports\SportAllSports;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -35,7 +35,7 @@ class ImportSports extends Command
 
             $this->info("Importing sport: {$sport->name}");
 
-            $existingSport = Sport::where('name', $sport->name)->first();
+            $existingSport = SportAllSports::where('name', $sport->name)->first();
 
             if ($existingSport && ! $this->option('overwrite')) {
                 $this->info("Sport {$sport->name} already exists. Use --overwrite to update.");
@@ -43,7 +43,7 @@ class ImportSports extends Command
                 continue;
             }
 
-            $sportModel = $existingSport ?? new Sport;
+            $sportModel = $existingSport ?? new SportAllSports;
 
             $sportModel->name = $sport->name;
             $sportModel->import_id = $sport->id;

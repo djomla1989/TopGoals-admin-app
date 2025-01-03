@@ -3,7 +3,7 @@
 namespace App\Services\Scrapers\Team\Icon\Providers;
 
 
-use App\Models\Team;
+use App\Models\AllSports\TeamAllSports;
 use App\Services\Scrapers\IconProviderInterface;
 use App\Services\Scrapers\ImageScraperServiceInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
- * @implements IconProviderInterface<Team>
+ * @implements IconProviderInterface<TeamAllSports>
  */
 class FlashScoreTeamIconProvider implements IconProviderInterface
 {
@@ -54,7 +54,7 @@ class FlashScoreTeamIconProvider implements IconProviderInterface
             // STEP 3:
             // Parse teams and get name/slug/image
             return null;
-            /** @var Team $team */
+            /** @var TeamAllSports $team */
             $team = $model;
             $slug = $team->slug;
             $urlList = [];

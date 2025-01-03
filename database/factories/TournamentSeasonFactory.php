@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\TournamentSeason;
+use App\Models\AllSports\TournamentSeasonAllSports;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TournamentSeason>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AllSports\TournamentSeasonAllSports>
  */
 class TournamentSeasonFactory extends Factory
 {
@@ -22,9 +22,9 @@ class TournamentSeasonFactory extends Factory
         ];
     }
 
-    public static function buildFromNextEvent(\stdClass $event, int $tournamentId): TournamentSeason
+    public static function buildFromNextEvent(\stdClass $event, int $tournamentId): TournamentSeasonAllSports
     {
-        $tournamentSeasonModel = new TournamentSeason;
+        $tournamentSeasonModel = new TournamentSeasonAllSports;
 
         $tournamentSeasonModel->name = $event->season->name;
         $tournamentSeasonModel->slug = $event->season->slug ?? '';
@@ -36,12 +36,12 @@ class TournamentSeasonFactory extends Factory
         return $tournamentSeasonModel;
     }
 
-    public static function buildFromSeason(\stdClass $season, int $tournamentId, ?TournamentSeason $exitingTournamentSeason = null): TournamentSeason
+    public static function buildFromSeason(\stdClass $season, int $tournamentId, ?TournamentSeasonAllSports $exitingTournamentSeason = null): TournamentSeasonAllSports
     {
         if ($exitingTournamentSeason) {
             $tournamentSeasonModel = $exitingTournamentSeason;
         } else {
-            $tournamentSeasonModel = new TournamentSeason;
+            $tournamentSeasonModel = new TournamentSeasonAllSports;
         }
 
         $tournamentSeasonModel->name = $season->name;

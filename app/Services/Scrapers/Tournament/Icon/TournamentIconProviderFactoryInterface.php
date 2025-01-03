@@ -2,14 +2,14 @@
 
 namespace App\Services\Scrapers\Tournament\Icon;
 
-use App\Models\Tournament;
+use App\Models\AllSports\TournamentAllSports;
 use App\Services\Scrapers\IconProviderInterface;
 
 interface TournamentIconProviderFactoryInterface
 {
     /**
-     * @param Tournament $tournament
+     * @param TournamentAllSports $tournament
      * @return IconProviderInterface[] array
      */
-    public function getProviders(Tournament $tournament): array;
+    public function getProviders(TournamentAllSports $tournament): array;
 }

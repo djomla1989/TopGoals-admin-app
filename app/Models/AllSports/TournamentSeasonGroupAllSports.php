@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\AllSports;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -14,11 +15,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int tournament_season_id
  * @property bool is_group
  * @property int priority
- * @property Tournament tournament
- * @property TournamentSeason tournamentSeason
+ * @property TournamentAllSports tournament
+ * @property TournamentSeasonAllSports tournamentSeason
  */
-class TournamentSeasonGroup extends BaseModel
+class TournamentSeasonGroupAllSports extends BaseModel
 {
+    protected $table = 'tournament_season_groups_allsports';
+
     protected $fillable = [
         'import_id',
         'name',
@@ -32,11 +35,11 @@ class TournamentSeasonGroup extends BaseModel
 
     public function tournament(): BelongsTo
     {
-        return $this->belongsTo(Tournament::class);
+        return $this->belongsTo(TournamentAllSports::class);
     }
 
     public function tournamentSeason(): BelongsTo
     {
-        return $this->belongsTo(TournamentSeason::class);
+        return $this->belongsTo(TournamentSeasonAllSports::class);
     }
 }

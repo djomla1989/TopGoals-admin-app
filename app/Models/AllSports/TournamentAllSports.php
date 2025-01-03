@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\AllSports;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -15,8 +16,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string image
  * @property string type
  */
-class Tournament extends BaseModel
+class TournamentAllSports extends BaseModel
 {
+    protected $table = 'tournaments_allsports';
+
     protected $fillable = [
         'name',
         'slug',
@@ -29,16 +32,16 @@ class Tournament extends BaseModel
 
     public function sport(): BelongsTo
     {
-        return $this->belongsTo(Sport::class);
+        return $this->belongsTo(SportAllSports::class);
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(CategoryAllSports::class);
     }
 
     public function seasons(): HasMany
     {
-        return $this->hasMany(TournamentSeason::class);
+        return $this->hasMany(TournamentSeasonAllSports::class);
     }
 }

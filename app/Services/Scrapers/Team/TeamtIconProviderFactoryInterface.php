@@ -2,14 +2,14 @@
 
 namespace App\Services\Scrapers\Team;
 
-use App\Models\Team;
+use App\Models\AllSports\TeamAllSports;
 use App\Services\Scrapers\IconProviderInterface;
 
 interface TeamtIconProviderFactoryInterface
 {
     /**
-     * @param Team $team
+     * @param TeamAllSports $team
      * @return IconProviderInterface[] array
      */
-    public function getProviders(Team $team): array;
+    public function getProviders(TeamAllSports $team): array;
 }

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\SportsImport;
 
-use App\Models\Category;
+use App\Models\AllSports\CategoryAllSports;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -33,7 +33,7 @@ class ImportCategories extends Command
             $category = json_decode(json_encode($category));
 
             $this->info("Importing country: {$category->name}");
-            $existingCategory = Category::where('name', $category->name)->first();
+            $existingCategory = CategoryAllSports::where('name', $category->name)->first();
 
             if ($existingCategory && ! $this->option('overwrite')) {
                 $this->info("Category {$category->name} already exists. Use --overwrite to update.");
@@ -41,7 +41,7 @@ class ImportCategories extends Command
                 continue;
             }
 
-            $categoryModel = $existingCategory ?? new Category;
+            $categoryModel = $existingCategory ?? new CategoryAllSports;
 
             $categoryModel->name = $category->name;
             $categoryModel->import_id = $category->id;

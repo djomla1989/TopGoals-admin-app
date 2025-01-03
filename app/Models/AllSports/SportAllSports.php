@@ -1,9 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\AllSports;
 
-class Sport extends BaseModel
+use App\Models\BaseModel;
+
+class SportAllSports extends BaseModel
 {
+    protected $table = 'sports_allsports';
+
     const FOOTBALL = 'Football';
 
     protected $fillable = [

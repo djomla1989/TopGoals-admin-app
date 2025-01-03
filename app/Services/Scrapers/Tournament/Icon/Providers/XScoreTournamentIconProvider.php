@@ -3,7 +3,7 @@
 namespace App\Services\Scrapers\Tournament\Icon\Providers;
 
 
-use App\Models\Tournament;
+use App\Models\AllSports\TournamentAllSports;
 use App\Services\Scrapers\IconProviderInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Client\Factory as HttpClient;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
- * @implements IconProviderInterface<Tournament>
+ * @implements IconProviderInterface<TournamentAllSports>
  */
 class XScoreTournamentIconProvider implements IconProviderInterface
 {
@@ -27,7 +27,7 @@ class XScoreTournamentIconProvider implements IconProviderInterface
         try {
             $urlList = [];
             $url = '';
-            /** @var Tournament $tournament */
+            /** @var TournamentAllSports $tournament */
             $tournament = $model;
             $category = $tournament->category;
             $categoryName = Str::slug($category->name);

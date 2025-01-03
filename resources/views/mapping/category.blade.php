@@ -1,7 +1,21 @@
 @extends('layout')
 
 @section('content')
-    <h1>Mapiranje za {{ ucfirst($table) }}</h1>
+    <h1 class="text-3xl">Mapiranje za Kategorije</h1>
+
+    <div class="mt-2">
+        <label><strong>Objasnjenje</strong></label>
+        <ol>
+            <li>Ove su prikazane kategorije u 4 kolone ( po svakom izvoru )</li>
+            <li>Prva kolona je <strong>OS Sports `izvor`</strong> i ona je glavna, i ne moze da se menja</li>
+            <li>Treba mapirati kategorije iz ostalih `izvora` (sources ) sa OS Sports</li>
+            <li>Po default kategorije su mapirani prema prvom/OS-Sport izvodu po <string>Ime ili slug</string>, i tada ce pored reda pisati <span class="text-red-500">`Auto`</span>. Posle sacuvavanje, taj `auto` ce nestati</li>
+            <li><strong>Os-sport / All Sport i Sport Radar su oko 95% slicne, sto znaci da su vec same po sebi mapirane. Imaju isto ime kao i "ID"</strong>, ali svakako je potrebno potvrditi na save</li>
+            <li>Posle svake promene, mora se <strong>sacuvati promena na dugme "SAVE MAPPINGS" na kraju</strong></li>
+            <li>Ukoliko je doslo do pogresnog mapiranja, mora se rucno ispraviti, tj odabrati zeljenu kategoriju ( ili ostaviti prazno ) i opet sacuvati</li>
+            <li>Sve Mapirane kategorije ce se prikazati u <a class="text-blue-500" href="/map/tournament">Mapiranje turnira</a> </li>
+        </ol>
+    </div>
 
     @if(session('success'))
         <div class="alert text-red-500 text-sm">{{ session('success') }}</div>
@@ -29,11 +43,11 @@
 
                     <!-- All Sports -->
                     <td class="border border-slate-300 w-1/4">
-                        <select name="mapping[allsport][{{ $osSport->id }}]" class="searchable-select" style="width: 85%">
+                        <select name="mapping[allsport][{{ $osSport->import_id }}]" class="searchable-select" style="width: 85%">
                             <option value="">-- Izaberi --</option>
                             @foreach($dataAllSports as $itemAllSports)
-                                <option value="{{ $itemAllSports->id }}"
-                                        @if($row['selectedAllSports'] == $itemAllSports->id) selected @endif>
+                                <option value="{{ $itemAllSports->import_id }}"
+                                        @if($row['selectedAllSports'] == $itemAllSports->import_id) selected @endif>
                                     {{ $itemAllSports->name }} - `{{$itemAllSports->slug}}` (ID: {{ $itemAllSports->import_id }})
                                 </option>
                             @endforeach
@@ -45,11 +59,11 @@
 
                     <!-- Tipster - Odds Feed -->
                     <td class="border border-slate-300 w-1/4">
-                        <select name="mapping[oddsfeed][{{ $osSport->id }}]" class="searchable-select" style="width: 85%">
+                        <select name="mapping[oddsfeed][{{ $osSport->import_id }}]" class="searchable-select" style="width: 85%">
                             <option value="">-- Izaberi --</option>
                             @foreach($dataOddsFeed as $itemOddsFeed)
-                                <option value="{{ $itemOddsFeed->id }}"
-                                        @if($row['selectedOddsFeed'] == $itemOddsFeed->id) selected @endif>
+                                <option value="{{ $itemOddsFeed->import_id }}"
+                                        @if($row['selectedOddsFeed'] == $itemOddsFeed->import_id) selected @endif>
                                     {{ $itemOddsFeed->name }} - `{{$itemOddsFeed->slug}}` (ID: {{ $itemOddsFeed->import_id }})
                                 </option>
                             @endforeach
@@ -61,11 +75,11 @@
 
                     <!-- Sport Radar -->
                     <td class="border border-slate-300 w-1/4">
-                        <select name="mapping[sportradar][{{ $osSport->id }}]" class="searchable-select" style="width: 85%">
+                        <select name="mapping[sportradar][{{ $osSport->import_id }}]" class="searchable-select" style="width: 85%">
                             <option value="">-- Izaberi --</option>
                             @foreach($dataSportRadar as $sportRadar)
-                                <option value="{{ $sportRadar->id }}"
-                                        @if($row['selectedSportRadar'] == $sportRadar->id) selected @endif>
+                                <option value="{{ $sportRadar->import_id }}"
+                                        @if($row['selectedSportRadar'] == $sportRadar->import_id) selected @endif>
                                     {{ $sportRadar->name }} - `{{$sportRadar->slug}}` (ID: {{ preg_replace('/\D/', '',$sportRadar->import_id) }})
                                 </option>
                             @endforeach

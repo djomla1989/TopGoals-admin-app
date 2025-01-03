@@ -2,7 +2,7 @@ name: Docker Build and Deploy
 on:
   push:
     branches:
-      - TG-16-Os-Sport-Import
+      - TG-17-Mapp-with-import-id
 
 jobs:
   build-and-deploy:

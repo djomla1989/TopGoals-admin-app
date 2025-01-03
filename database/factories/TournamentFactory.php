@@ -4,11 +4,11 @@ namespace Database\Factories;
 
 use App\Enums\Gender;
 use App\Enums\TournamentTypeEnum;
-use App\Models\Tournament;
+use App\Models\AllSports\TournamentAllSports;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tournament>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AllSports\TournamentAllSports>
  */
 class TournamentFactory extends Factory
 {
@@ -24,7 +24,7 @@ class TournamentFactory extends Factory
         ];
     }
 
-    public static function buildFromNextEvent(\stdClass $event, int $sportId, int $categoryId): Tournament
+    public static function buildFromNextEvent(\stdClass $event, int $sportId, int $categoryId): TournamentAllSports
     {
         $tournamentModel = TournamentFactory::buildFromTournament($event->tournament->uniqueTournament, $sportId, $categoryId);
         $tournamentModel->gender = Gender::resolveGender($event->homeTeam->gender ?? '', $event->slug)->value;
@@ -32,7 +32,7 @@ class TournamentFactory extends Factory
         return $tournamentModel;
     }
 
-    public static function buildFromTeam(\stdClass $team, int $sportId, int $categoryId): Tournament
+    public static function buildFromTeam(\stdClass $team, int $sportId, int $categoryId): TournamentAllSports
     {
         $tournamentModel = TournamentFactory::buildFromTournament($team->tournament->uniqueTournament, $sportId, $categoryId);
         $tournamentModel->gender = Gender::resolveGender($team?->gender ?? '', $team->name)->value;
@@ -40,12 +40,12 @@ class TournamentFactory extends Factory
         return $tournamentModel;
     }
 
-    public static function buildFromTournament(\stdClass $tournament, int $sportId, int $countryId, ?Tournament $exitingTournament = null): Tournament
+    public static function buildFromTournament(\stdClass $tournament, int $sportId, int $countryId, ?TournamentAllSports $exitingTournament = null): TournamentAllSports
     {
         if ($exitingTournament) {
             $tournamentModel = $exitingTournament;
         } else {
-            $tournamentModel = new Tournament;
+            $tournamentModel = new TournamentAllSports;
         }
 
         $tournamentModel->name = $tournament->name;

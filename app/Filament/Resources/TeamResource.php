@@ -3,9 +3,9 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TeamResource\Pages;
-use App\Models\Category;
-use App\Models\Team;
-use App\Models\Tournament;
+use App\Models\AllSports\CategoryAllSports;
+use App\Models\AllSports\TeamAllSports;
+use App\Models\AllSports\TournamentAllSports;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class TeamResource extends Resource
 {
-    protected static ?string $model = Team::class;
+    protected static ?string $model = TeamAllSports::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -66,7 +66,7 @@ class TeamResource extends Resource
                     ->label('Custom')
                     ->form([
                         Forms\Components\Select::make('category')
-                            ->options(fn () => Category::pluck('name', 'id')->toArray())
+                            ->options(fn () => CategoryAllSports::pluck('name', 'id')->toArray())
                             ->preload()
                             ->live()
                             ->reactive()
@@ -80,10 +80,10 @@ class TeamResource extends Resource
                                 $category = $get('category');
 
                                 if (! empty($category)) {
-                                    return Tournament::query()->where('category_id', $category)->pluck('name', 'id')->toArray();
+                                    return TournamentAllSports::query()->where('category_id', $category)->pluck('name', 'id')->toArray();
                                 }
 
-                                return Tournament::query()->pluck('name', 'id')->toArray();
+                                return TournamentAllSports::query()->pluck('name', 'id')->toArray();
                             })
                             ->label('Primary Tournament')
                             ->preload()
@@ -108,12 +108,12 @@ class TeamResource extends Resource
 
                         if ($data['category'] ?? null) {
 
-                            $indicators[] = Tables\Filters\Indicator::make('Category: '.Category::find($data['category'])->name)
+                            $indicators[] = Tables\Filters\Indicator::make('Category: '.CategoryAllSports::find($data['category'])->name)
                                 ->removeField('category');
                         }
 
                         if ($data['tournament'] ?? null) {
-                            $indicators[] = Tables\Filters\Indicator::make('Primary tournament: '.Tournament::find($data['tournament'])->name)
+                            $indicators[] = Tables\Filters\Indicator::make('Primary tournament: '.TournamentAllSports::find($data['tournament'])->name)
                                 ->removeField('tournament');
                         }
 

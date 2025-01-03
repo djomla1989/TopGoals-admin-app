@@ -2,13 +2,13 @@
 
 namespace App\Jobs;
 
-use App\Models\Category;
-use App\Models\Sport;
-use App\Models\Team;
-use App\Models\Tournament;
-use App\Models\TournamentSeason;
-use App\Models\TournamentSeasonGroup;
-use App\Models\TournamentSeasonNextEvent;
+use App\Models\AllSports\CategoryAllSports;
+use App\Models\AllSports\SportAllSports;
+use App\Models\AllSports\TeamAllSports;
+use App\Models\AllSports\TournamentAllSports;
+use App\Models\AllSports\TournamentSeasonAllSports;
+use App\Models\AllSports\TournamentSeasonGroupAllSports;
+use App\Models\AllSports\TournamentSeasonNextEventAllSports;
 use Database\Factories\CategoryFactory;
 use Database\Factories\TeamFactory;
 use Database\Factories\TournamentFactory;
@@ -53,9 +53,9 @@ class ProcessTournamentSeasonNextEvents implements ShouldQueue
 
             $data = json_decode(json_encode($this->data));
 
-            $tournament = Tournament::query()->where('import_id', $data->uniqueTournament->id)->first();
-            $season = TournamentSeason::query()->where('import_id', $data->uniqueTournamentSeason->id)->first();
-            $sport = Sport::query()->where('name', Sport::FOOTBALL)->first();
+            $tournament = TournamentAllSports::query()->where('import_id', $data->uniqueTournament->id)->first();
+            $season = TournamentSeasonAllSports::query()->where('import_id', $data->uniqueTournamentSeason->id)->first();
+            $sport = SportAllSports::query()->where('name', SportAllSports::FOOTBALL)->first();
 
             $this->writeLog('Processing tournament season next events: '.$data->uniqueTournamentSeason->id, true);
 
@@ -66,7 +66,7 @@ class ProcessTournamentSeasonNextEvents implements ShouldQueue
                 return;
             }
 
-            $category = Category::query()->where('import_id', $firstEvent->tournament->category->id)->first();
+            $category = CategoryAllSports::query()->where('import_id', $firstEvent->tournament->category->id)->first();
 
             if (empty($category)) {
                 $category = CategoryFactory::buildFromNextEvent($firstEvent);
@@ -87,7 +87,7 @@ class ProcessTournamentSeasonNextEvents implements ShouldQueue
             $eventForSave = [];
             foreach ($data->events as $event) {
 
-                $eventExist = TournamentSeasonNextEvent::query()
+                $eventExist = TournamentSeasonNextEventAllSports::query()
                     ->where('import_id', $event->id)
                     ->first();
                 if (! empty($eventExist) && $this->overwrite === false) {
@@ -96,9 +96,9 @@ class ProcessTournamentSeasonNextEvents implements ShouldQueue
                     continue;
                 }
 
-                $homeTeam = Team::query()->where('import_id', $event->homeTeam->id)->first();
-                $awayTeam = Team::query()->where('import_id', $event->awayTeam->id)->first();
-                $tournamentSeasonGroup = TournamentSeasonGroup::query()->where('import_id', $event->tournament->id)->first();
+                $homeTeam = TeamAllSports::query()->where('import_id', $event->homeTeam->id)->first();
+                $awayTeam = TeamAllSports::query()->where('import_id', $event->awayTeam->id)->first();
+                $tournamentSeasonGroup = TournamentSeasonGroupAllSports::query()->where('import_id', $event->tournament->id)->first();
 
                 if (empty($homeTeam)) {
                     $homeTeam = TeamFactory::buildFromTeam(
@@ -141,9 +141,9 @@ class ProcessTournamentSeasonNextEvents implements ShouldQueue
 
             if (! empty($eventForSave)) {
                 if ($this->overwrite) {
-                    TournamentSeasonNextEvent::query()->updateOrInsert($eventForSave);
+                    TournamentSeasonNextEventAllSports::query()->updateOrInsert($eventForSave);
                 } else {
-                    TournamentSeasonNextEvent::query()->insert($eventForSave);
+                    TournamentSeasonNextEventAllSports::query()->insert($eventForSave);
                 }
 
                 $this->writeLog(count($eventForSave).' Events saved for tournament season '.$data->uniqueTournamentSeason->id, true);

@@ -2,15 +2,12 @@
 
 namespace App\Services\Scrapers\Team;
 
-use App\Models\Team;
-use App\Models\Tournament;
+use App\Models\AllSports\TeamAllSports;
 use App\Services\Scrapers\Exceptions\TeamIconSportNotSupportedException;
-use App\Services\Scrapers\Exceptions\TournamentIconSportNotSupportedException;
 use App\Services\Scrapers\ImageScraperServiceInterface;
 use App\Services\Scrapers\Team\Icon\Providers\FlashScoreTeamIconProvider;
 use App\Services\Scrapers\Team\Icon\Providers\LiveScoresBizTeamIconProvider;
 use App\Services\Scrapers\Team\Icon\Providers\XScoreTeamIconProvider;
-use App\Services\Scrapers\Tournament\Icon\Providers\XScoreTournamentIconProvider;
 use Illuminate\Http\Client\Factory as HttpClient;
 use Illuminate\Support\Facades\Log;
 
@@ -27,7 +24,7 @@ class TeamtIconProviderFactory implements TeamtIconProviderFactoryInterface
 
     }
 
-    public function getProviders(Team $team): array
+    public function getProviders(TeamAllSports $team): array
     {
         try {
             $sport = $team->sport->id;

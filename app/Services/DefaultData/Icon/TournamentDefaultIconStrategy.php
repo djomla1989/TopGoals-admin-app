@@ -2,10 +2,9 @@
 
 namespace App\Services\DefaultData\Icon;
 
-use App\Models\Tournament;
+use App\Models\AllSports\TournamentAllSports;
 use App\Services\DefaultData\Exception\DefaultDataModelNotSupportedException;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 class TournamentDefaultIconStrategy implements DefaultIconStrategyInterface
 {
@@ -35,7 +34,7 @@ class TournamentDefaultIconStrategy implements DefaultIconStrategyInterface
     ];
 
     /**
-     * @param Tournament $model
+     * @param TournamentAllSports $model
      * @throws DefaultDataModelNotSupportedException
      */
     public function getDefaultIcon(Model $model): ?string
@@ -54,7 +53,7 @@ class TournamentDefaultIconStrategy implements DefaultIconStrategyInterface
     }
 
 
-    protected function getTennisDefaultIcon(Tournament $model): string
+    protected function getTennisDefaultIcon(TournamentAllSports $model): string
     {
         $slug = $model->slug;
         $level = $model->level;
@@ -74,6 +73,6 @@ class TournamentDefaultIconStrategy implements DefaultIconStrategyInterface
 
     public function supports(Model $model): bool
     {
-        return $model instanceof Tournament;
+        return $model instanceof TournamentAllSports;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Services\Scrapers;
 
-use App\Models\Team;
-use App\Models\Tournament;
+use App\Models\AllSports\TeamAllSports;
+use App\Models\AllSports\TournamentAllSports;
 use App\Services\DefaultData\Exception\DefaultDataModelNotSupportedException;
 use App\Services\Scrapers\Team\TeamtIconProviderFactoryInterface;
 use App\Services\Scrapers\Tournament\Icon\TournamentIconProviderFactoryInterface;
@@ -32,8 +32,8 @@ class IconProviderFactory implements IconProviderFactoryInterface
     public function getModelProviders(Model $model): array
     {
         return match (true) {
-            $model instanceof Tournament => $this->tournamentIconProviderFactory->getProviders($model),
-            $model instanceof Team => $this->teamIconProviderFactory->getProviders($model),
+            $model instanceof TournamentAllSports => $this->tournamentIconProviderFactory->getProviders($model),
+            $model instanceof TeamAllSports => $this->teamIconProviderFactory->getProviders($model),
             default => throw new DefaultDataModelNotSupportedException(
                 sprintf('Model %s not supported :: %s', get_class($model), __FILE__)
             )

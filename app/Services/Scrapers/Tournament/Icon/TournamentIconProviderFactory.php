@@ -2,7 +2,7 @@
 
 namespace App\Services\Scrapers\Tournament\Icon;
 
-use App\Models\Tournament;
+use App\Models\AllSports\TournamentAllSports;
 use App\Services\Scrapers\Exceptions\TournamentIconSportNotSupportedException;
 use App\Services\Scrapers\ImageScraperServiceInterface;
 use App\Services\Scrapers\Tournament\Icon\Providers\FlashScoreTournamentIconProvider;
@@ -25,7 +25,7 @@ class TournamentIconProviderFactory implements TournamentIconProviderFactoryInte
         $this->imageScraperService = $imageScraperService;
     }
 
-    public function getProviders(Tournament $tournament): array
+    public function getProviders(TournamentAllSports $tournament): array
     {
         try {
             $sport = $tournament->sport->id;

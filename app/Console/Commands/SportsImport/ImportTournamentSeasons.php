@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\SportsImport;
 
-use App\Models\Sport;
-use App\Models\Tournament;
+use App\Models\AllSports\SportAllSports;
+use App\Models\AllSports\TournamentAllSports;
 use Database\Factories\TournamentSeasonFactory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -40,7 +40,7 @@ class ImportTournamentSeasons extends Command
         $conn = DB::connection('mongodb');
         $tournamentSeasonList = $conn->table('uniqueTournamentSeasons')->orderBy('name')->get();
 
-        $sport = Sport::where('name', 'Football')->first();
+        $sport = SportAllSports::where('name', 'Football')->first();
         if (! $sport) {
             $this->info('Sport "Football" not found. Please import sports first.');
 
@@ -54,7 +54,7 @@ class ImportTournamentSeasons extends Command
                 $this->info("Importing tournament seasons: {$tournamentSeason->name} - {$tournamentSeason->id}");
             }
 
-            $existingTournamentSeason = Tournament::where('import_id', $tournamentSeason->id)->first();
+            $existingTournamentSeason = TournamentAllSports::where('import_id', $tournamentSeason->id)->first();
 
             if ($existingTournamentSeason && ! $this->option('overwrite')) {
                 if ($this->option('v')) {
@@ -64,7 +64,7 @@ class ImportTournamentSeasons extends Command
                 continue;
             }
 
-            $tournament = Tournament::where('import_id', $tournamentSeason->uniqueTournament->id)->first();
+            $tournament = TournamentAllSports::where('import_id', $tournamentSeason->uniqueTournament->id)->first();
 
             if (! $tournament) {
                 $this->error("Season {$tournamentSeason->name} does not have a tournament {$tournamentSeason->uniqueTournament->id} in database. Skipping.");

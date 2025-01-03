@@ -2,15 +2,15 @@
 
 namespace App\Services\DataImporters\Mappers;
 
-use App\Models\Category;
-use App\Models\Sport;
-use App\Models\Tournament;
+use App\Models\AllSports\CategoryAllSports;
+use App\Models\AllSports\SportAllSports;
+use App\Models\AllSports\TournamentAllSports;
 use Illuminate\Database\Eloquent\Model;
 
 class TournamentMapper extends AbstractModelMapper implements ModelMapperInterface
 {
     /**
-     * @param Sport $model
+     * @param SportAllSports $model
      * @param array $data
      * @return array
      */
@@ -28,13 +28,13 @@ class TournamentMapper extends AbstractModelMapper implements ModelMapperInterfa
         return $this->mapObject($priorityList, $tournamentList, $data);
     }
 
-    protected function getTournamentList(Category $model): array
+    protected function getTournamentList(CategoryAllSports $model): array
     {
-        return Tournament::where('category_id', $model->id)->get()->mapWithKeys(fn($team) => [$team->id => $team->name])->toArray();
+        return TournamentAllSports::where('category_id', $model->id)->get()->mapWithKeys(fn($team) => [$team->id => $team->name])->toArray();
     }
 
     public function supportsModel(Model $model): bool
     {
-        return $model instanceof Category;
+        return $model instanceof CategoryAllSports;
     }
 }

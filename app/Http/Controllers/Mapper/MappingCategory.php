@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Mapper;
 
 use App\Http\Controllers\Controller;
+use App\Models\AllSports\CategoryAllSports;
 use App\Models\DataMapping;
-use App\Models\Category;
 use App\Models\OsSport\CategoryOsSport;
 use App\Models\SportRadar\CategorySportRadar;
 use App\Models\Tipster\CategoryTipster;
@@ -20,7 +20,7 @@ class MappingCategory extends Controller
 
         // Sve podatke dohvatamo odjednom
         $dataOsSports   = CategoryOsSport::all();          // ~200
-        $dataAllSports  = Category::all();                 // ~200
+        $dataAllSports  = CategoryAllSports::all();                 // ~200
         $dataOddsFeed   = CategoryTipster::all();          // ~200
         $dataSportRadar = CategorySportRadar::orderBy('name')->get(); // ~200
 
@@ -62,9 +62,9 @@ class MappingCategory extends Controller
 
         foreach ($dataOsSports as $osSport) {
 
-            $selectedAllSports    = $mappings[$osSport->id]['allsport_table_id']    ?? null;
-            $selectedOddsFeed     = $mappings[$osSport->id]['oddsfeed_table_id']    ?? null;
-            $selectedSportRadar   = $mappings[$osSport->id]['sportradar_table_id']  ?? null;
+            $selectedAllSports    = $mappings[$osSport->import_id]['allsport_table_id']    ?? null;
+            $selectedOddsFeed     = $mappings[$osSport->import_id]['oddsfeed_table_id']    ?? null;
+            $selectedSportRadar   = $mappings[$osSport->import_id]['sportradar_table_id']  ?? null;
 
             $isAutoMappedAllSports  = false;
             $isAutoMappedOddsFeed   = false;
@@ -76,10 +76,10 @@ class MappingCategory extends Controller
                 $slug = strtolower($osSport->slug);
 
                 if (isset($allSportsMapByName[$name])) {
-                    $selectedAllSports = $allSportsMapByName[$name]->id;
+                    $selectedAllSports = $allSportsMapByName[$name]->import_id;
                     $isAutoMappedAllSports = true;
                 } elseif (isset($allSportsMapBySlug[$slug])) {
-                    $selectedAllSports = $allSportsMapBySlug[$slug]->id;
+                    $selectedAllSports = $allSportsMapBySlug[$slug]->import_id;
                     $isAutoMappedAllSports = true;
                 }
             }
@@ -89,10 +89,10 @@ class MappingCategory extends Controller
                 $slug = strtolower($osSport->slug);
 
                 if (isset($oddsFeedMapByName[$name])) {
-                    $selectedOddsFeed = $oddsFeedMapByName[$name]->id;
+                    $selectedOddsFeed = $oddsFeedMapByName[$name]->import_id;
                     $isAutoMappedOddsFeed = true;
                 } elseif (isset($oddsFeedMapBySlug[$slug])) {
-                    $selectedOddsFeed = $oddsFeedMapBySlug[$slug]->id;
+                    $selectedOddsFeed = $oddsFeedMapBySlug[$slug]->import_id;
                     $isAutoMappedOddsFeed = true;
                 }
             }
@@ -102,10 +102,10 @@ class MappingCategory extends Controller
                 $slug = strtolower($osSport->slug);
 
                 if (isset($sportRadarMapByName[$name])) {
-                    $selectedSportRadar = $sportRadarMapByName[$name]->id;
+                    $selectedSportRadar = $sportRadarMapByName[$name]->import_id;
                     $isAutoMappedSportRadar = true;
                 } elseif (isset($sportRadarMapBySlug[$slug])) {
-                    $selectedSportRadar = $sportRadarMapBySlug[$slug]->id;
+                    $selectedSportRadar = $sportRadarMapBySlug[$slug]->import_id;
                     $isAutoMappedSportRadar = true;
                 }
             }

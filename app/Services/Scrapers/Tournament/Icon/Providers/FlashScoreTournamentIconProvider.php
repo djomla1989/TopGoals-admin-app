@@ -3,7 +3,7 @@
 namespace App\Services\Scrapers\Tournament\Icon\Providers;
 
 
-use App\Models\Tournament;
+use App\Models\AllSports\TournamentAllSports;
 use App\Services\Scrapers\IconProviderInterface;
 use App\Services\Scrapers\ImageScraperServiceInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 /**
- * @implements IconProviderInterface<Tournament>
+ * @implements IconProviderInterface<TournamentAllSports>
  */
 class FlashScoreTournamentIconProvider implements IconProviderInterface
 {
@@ -34,7 +34,7 @@ class FlashScoreTournamentIconProvider implements IconProviderInterface
     public function fetchIconUrl(Model $model): ?string
     {
         try {
-            /** @var Tournament $tournament */
+            /** @var TournamentAllSports $tournament */
             $tournament = $model;
             $slug = $tournament->slug;
             $urlList = [];

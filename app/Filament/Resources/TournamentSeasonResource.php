@@ -3,7 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TournamentSeasonResource\Pages;
-use App\Models\TournamentSeason;
+use App\Models\AllSports\TournamentSeasonAllSports;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -11,7 +11,7 @@ use Filament\Tables\Table;
 
 class TournamentSeasonResource extends Resource
 {
-    protected static ?string $model = TournamentSeason::class;
+    protected static ?string $model = TournamentSeasonAllSports::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands\SportsImport;
 
-use App\Models\Category;
-use App\Models\Sport;
-use App\Models\Team;
-use App\Models\Tournament;
+use App\Models\AllSports\CategoryAllSports;
+use App\Models\AllSports\SportAllSports;
+use App\Models\AllSports\TeamAllSports;
+use App\Models\AllSports\TournamentAllSports;
 use Database\Factories\CategoryFactory;
 use Database\Factories\TeamFactory;
 use Database\Factories\TournamentFactory;
@@ -42,7 +42,7 @@ class ImportTeams extends Command
         $conn = DB::connection('mongodb');
         $teams = $conn->table('teamDetails')->orderBy('id')->get();
 
-        $sport = Sport::where('name', 'Football')->first();
+        $sport = SportAllSports::where('name', 'Football')->first();
         $sportId = $sport->id;
 
         $categoryList = [];
@@ -56,7 +56,7 @@ class ImportTeams extends Command
                 $this->info("Importing team: {$team->name} - {$team->id}");
             }
 
-            $existingTeam = Team::where('import_id', $team->id)->first();
+            $existingTeam = TeamAllSports::where('import_id', $team->id)->first();
 
             if ($existingTeam && ! $this->option('overwrite')) {
                 $this->error("Team {$team->name} already exists. Use --overwrite to update.");
@@ -77,7 +77,7 @@ class ImportTeams extends Command
             }
 
             if (! isset($categoryList[$teamTournament->category->id])) {
-                $categoryModel = Category::where('import_id', $teamTournament->category->id)->first();
+                $categoryModel = CategoryAllSports::where('import_id', $teamTournament->category->id)->first();
 
                 if (empty($categoryModel)) {
                     $categoryModel = CategoryFactory::buildFromCategory($teamTournament->category);
@@ -94,7 +94,7 @@ class ImportTeams extends Command
 
             $tournamentId = $teamTournament->uniqueTournament->id ?? null;
             if (! empty($tournamentId) && ! isset($primaryUniqueTournamentList[$tournamentId])) {
-                $tournamentModel = Tournament::where('import_id', $teamTournament->uniqueTournament->id)->first();
+                $tournamentModel = TournamentAllSports::where('import_id', $teamTournament->uniqueTournament->id)->first();
 
                 if (empty($tournamentModel)) {
                     $tournamentModel = TournamentFactory::buildFromTeam($team, $sportId, $categoryList[$teamTournament->category->id]);

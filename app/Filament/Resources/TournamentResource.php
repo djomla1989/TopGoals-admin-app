@@ -6,9 +6,9 @@ use App\Enums\Gender;
 use App\Enums\TournamentTypeEnum;
 use App\Filament\Resources\TournamentResource\Pages;
 use App\Filament\Resources\TournamentResource\RelationManagers;
-use App\Models\Category;
-use App\Models\Sport;
-use App\Models\Tournament;
+use App\Models\AllSports\CategoryAllSports;
+use App\Models\AllSports\SportAllSports;
+use App\Models\AllSports\TournamentAllSports;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -17,7 +17,7 @@ use Illuminate\Support\HtmlString;
 
 class TournamentResource extends Resource
 {
-    protected static ?string $model = Tournament::class;
+    protected static ?string $model = TournamentAllSports::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -62,7 +62,7 @@ class TournamentResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('sport_id')
                     ->options(function () {
-                        $list = Sport::query()->pluck('name', 'id');
+                        $list = SportAllSports::query()->pluck('name', 'id');
                         $list = $list->mapWithKeys(function ($item, $key) {
 
                             $html = new HtmlString('<strong>'.$item.'</strong>');
@@ -75,7 +75,7 @@ class TournamentResource extends Resource
                     ->searchable()
                     ->label('Sport'),
                 Tables\Filters\SelectFilter::make('category_id')
-                    ->options(fn () => Category::query()->pluck('name', 'id'))
+                    ->options(fn () => CategoryAllSports::query()->pluck('name', 'id'))
 
                     ->searchable()
                     ->multiple()
