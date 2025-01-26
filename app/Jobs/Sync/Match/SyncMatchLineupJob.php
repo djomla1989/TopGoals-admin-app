@@ -98,7 +98,7 @@ class SyncMatchLineupJob extends AbstractSyncJob implements ShouldQueue, ShouldB
                 $playerData,
                 $teamLineup,
                 $player,
-                !empty($playerData['reason']),//TODO: this can be 1 or 11 or more...
+                !empty($playerData['reason']),//TODO: this can be 1 or 11 or more... maybe rename colum to `missing_reason`
                 $playerData['type'] ?? null//TODO: add missing reason
             );
             $playerLineup->save();
