@@ -1,0 +1,139 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('season_team_statistics', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('season_id')->constrained('seasons');
+            $table->foreignId('team_id')->constrained('teams');
+            $table->smallInteger('matches')->unsigned()->default(0);
+            $table->smallInteger('avg_rating')->unsigned()->default(0);
+            $table->smallInteger('goals_scored')->unsigned()->default(0);
+            $table->smallInteger('goals_conceded')->unsigned()->default(0);
+            $table->smallInteger('big_chances')->unsigned()->default(0);
+            $table->smallInteger('big_chances_missed')->unsigned()->default(0);
+            $table->smallInteger('hit_woodwork')->unsigned()->default(0);
+            $table->smallInteger('yellow_cards')->unsigned()->default(0);
+            $table->smallInteger('red_cards')->unsigned()->default(0);
+            $table->smallInteger('average_ball_possession')->unsigned()->default(0);
+            $table->smallInteger('accurate_passes')->unsigned()->default(0);
+            $table->smallInteger('accurate_long_balls')->unsigned()->default(0);
+            $table->smallInteger('accurate_crosses')->unsigned()->default(0);
+            $table->smallInteger('shots')->unsigned()->default(0);
+            $table->smallInteger('shots_on_target')->unsigned()->default(0);
+            $table->smallInteger('successful_dribbles')->unsigned()->default(0);
+            $table->smallInteger('tackles')->unsigned()->default(0);
+            $table->smallInteger('interceptions')->unsigned()->default(0);
+            $table->smallInteger('clearances')->unsigned()->default(0);
+            $table->smallInteger('corners')->unsigned()->default(0);
+            $table->smallInteger('fouls')->unsigned()->default(0);
+            $table->smallInteger('penalties_taken')->unsigned()->default(0);
+            $table->smallInteger('penalty_goals')->unsigned()->default(0);
+            $table->smallInteger('penalties_committed')->unsigned()->default(0);
+            $table->smallInteger('penalty_goals_conceded')->unsigned()->default(0);
+            $table->smallInteger('clean_sheets')->unsigned()->default(0);
+            $table->smallInteger('own_goals')->unsigned()->default(0);
+            $table->smallInteger('assists')->unsigned()->default(0);
+            $table->smallInteger('free_kick_goals')->unsigned()->default(0);
+            $table->smallInteger('free_kick_shots')->unsigned()->default(0);
+            $table->smallInteger('goals_from_inside_the_box')->unsigned()->default(0);
+            $table->smallInteger('goals_from_outside_the_box')->unsigned()->default(0);
+            $table->smallInteger('shots_from_inside_the_box')->unsigned()->default(0);
+            $table->smallInteger('shots_from_outside_the_box')->unsigned()->default(0);
+            $table->smallInteger('headed_goals')->unsigned()->default(0);
+            $table->smallInteger('left_foot_goals')->unsigned()->default(0);
+            $table->smallInteger('right_foot_goals')->unsigned()->default(0);
+            $table->smallInteger('big_chances_created')->unsigned()->default(0);
+            $table->smallInteger('shots_off_target')->unsigned()->default(0);
+            $table->smallInteger('blocked_scoring_attempt')->unsigned()->default(0);
+            $table->smallInteger('dribble_attempts')->unsigned()->default(0);
+            $table->smallInteger('fast_breaks')->unsigned()->default(0);
+            $table->smallInteger('fast_break_goals')->unsigned()->default(0);
+            $table->smallInteger('fast_break_shots')->unsigned()->default(0);
+            $table->smallInteger('total_passes')->unsigned()->default(0);
+            $table->smallInteger('accurate_passes_percentage')->unsigned()->default(0);
+            $table->smallInteger('total_own_half_passes')->unsigned()->default(0);
+            $table->smallInteger('accurate_own_half_passes')->unsigned()->default(0);
+            $table->smallInteger('accurate_own_half_passes_percentage')->unsigned()->default(0);
+            $table->smallInteger('total_opposition_half_passes')->unsigned()->default(0);
+            $table->smallInteger('accurate_opposition_half_passes')->unsigned()->default(0);
+            $table->smallInteger('accurate_opposition_half_passes_percentage')->unsigned()->default(0);
+            $table->smallInteger('total_long_balls')->unsigned()->default(0);
+            $table->smallInteger('accurate_long_balls_percentage')->unsigned()->default(0);
+            $table->smallInteger('total_crosses')->unsigned()->default(0);
+            $table->smallInteger('accurate_crosses_percentage')->unsigned()->default(0);
+            $table->smallInteger('saves')->unsigned()->default(0);
+            $table->smallInteger('errors_leading_to_goal')->unsigned()->default(0);
+            $table->smallInteger('errors_leading_to_shot')->unsigned()->default(0);
+            $table->smallInteger('clearances_off_line')->unsigned()->default(0);
+            $table->smallInteger('last_man_tackles')->unsigned()->default(0);
+            $table->smallInteger('total_duels')->unsigned()->default(0);
+            $table->smallInteger('duels_won')->unsigned()->default(0);
+            $table->smallInteger('duels_won_percentage')->unsigned()->default(0);
+            $table->smallInteger('total_ground_duels')->unsigned()->default(0);
+            $table->smallInteger('ground_duels_won')->unsigned()->default(0);
+            $table->smallInteger('ground_duels_won_percentage')->unsigned()->default(0);
+            $table->smallInteger('total_aerial_duels')->unsigned()->default(0);
+            $table->smallInteger('aerial_duels_won')->unsigned()->default(0);
+            $table->smallInteger('aerial_duels_won_percentage')->unsigned()->default(0);
+            $table->smallInteger('possession_lost')->unsigned()->default(0);
+            $table->smallInteger('offsides')->unsigned()->default(0);
+            $table->smallInteger('yellow_red_cards')->unsigned()->default(0);
+            $table->smallInteger('accurate_final_third_passes_against')->unsigned()->default(0);
+            $table->smallInteger('accurate_opposition_half_passes_against')->unsigned()->default(0);
+            $table->smallInteger('accurate_own_half_passes_against')->unsigned()->default(0);
+            $table->smallInteger('accurate_passes_against')->unsigned()->default(0);
+            $table->smallInteger('big_chances_against')->unsigned()->default(0);
+            $table->smallInteger('big_chances_created_against')->unsigned()->default(0);
+            $table->smallInteger('big_chances_missed_against')->unsigned()->default(0);
+            $table->smallInteger('clearances_against')->unsigned()->default(0);
+            $table->smallInteger('corners_against')->unsigned()->default(0);
+            $table->smallInteger('crosses_successful_against')->unsigned()->default(0);
+            $table->smallInteger('crosses_total_against')->unsigned()->default(0);
+            $table->smallInteger('dribble_attempts_total_against')->unsigned()->default(0);
+            $table->smallInteger('dribble_attempts_won_against')->unsigned()->default(0);
+            $table->smallInteger('errors_leading_to_goal_against')->unsigned()->default(0);
+            $table->smallInteger('errors_leading_to_shot_against')->unsigned()->default(0);
+            $table->smallInteger('hit_woodwork_against')->unsigned()->default(0);
+            $table->smallInteger('interceptions_against')->unsigned()->default(0);
+            $table->smallInteger('key_passes_against')->unsigned()->default(0);
+            $table->smallInteger('long_balls_successful_against')->unsigned()->default(0);
+            $table->smallInteger('long_balls_total_against')->unsigned()->default(0);
+            $table->smallInteger('offsides_against')->unsigned()->default(0);
+            $table->smallInteger('red_cards_against')->unsigned()->default(0);
+            $table->smallInteger('shots_against')->unsigned()->default(0);
+            $table->smallInteger('shots_blocked_against')->unsigned()->default(0);
+            $table->smallInteger('shots_from_inside_the_box_against')->unsigned()->default(0);
+            $table->smallInteger('shots_from_outside_the_box_against')->unsigned()->default(0);
+            $table->smallInteger('shots_off_target_against')->unsigned()->default(0);
+            $table->smallInteger('shots_on_target_against')->unsigned()->default(0);
+            $table->smallInteger('blocked_scoring_attempt_against')->unsigned()->default(0);
+            $table->smallInteger('tackles_against')->unsigned()->default(0);
+            $table->smallInteger('total_final_third_passes_against')->unsigned()->default(0);
+            $table->smallInteger('opposition_half_passes_total_against')->unsigned()->default(0);
+            $table->smallInteger('own_half_passes_total_against')->unsigned()->default(0);
+            $table->smallInteger('total_passes_against')->unsigned()->default(0);
+            $table->smallInteger('yellow_cards_against')->unsigned()->default(0);
+            $table->dateTime('last_sync')->nullable();
+
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('season_team_statistics');
+    }
+};

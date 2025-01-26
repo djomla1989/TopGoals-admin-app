@@ -8,7 +8,15 @@ use Illuminate\Database\Query\Builder;
 /**
  * @property int id
  *
- * @mixin \Eloquent
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ * @mixin Model
  * @mixin Builder
+ * @mixin QueryBuilde
  */
-class BaseModel extends Model {}
+class BaseModel extends Model implements BaseModelInterface
+{
+    public function getId(): int
+    {
+        return $this->id;
+    }
+}

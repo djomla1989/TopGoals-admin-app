@@ -6,7 +6,7 @@ enum Gender: string
 {
     case Male = 'M';
     case Female = 'F';
-    case Mixed = 'MIX';
+    case Mixed = 'X';
 
     public static function resolveGender(string $gender, string $fallback): Gender
     {

@@ -49,3 +49,8 @@
     `sail composer require larastan/larastan --dev`
 
     `sail composer install`
+
+- Remove redis jobs
+- `sail exec redis redis-cli`
+- ` KEYS *` --> list all
+- `FLUSHALL` --> remove all

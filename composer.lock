@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e495c6ec9254ed07c045450584271988",
+    "content-hash": "68fc5056be93cc0337f61e270ad6a810",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -71,6 +71,54 @@
                 "source": "https://github.com/AnourValar/eloquent-serialize/tree/1.2.25"
             },
             "time": "2024-09-16T12:59:37+00:00"
+        },
+        {
+            "name": "artisansdk/ratelimiter",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/artisansdk/ratelimiter.git",
+                "reference": "f7bd47d89a4fb00c0fda0355a4f10e880aab98f2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/artisansdk/ratelimiter/zipball/f7bd47d89a4fb00c0fda0355a4f10e880aab98f2",
+                "reference": "f7bd47d89a4fb00c0fda0355a4f10e880aab98f2",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "~10.0|~11.0",
+                "nesbot/carbon": "~2.0|~3.0",
+                "php": ">=8.1",
+                "symfony/http-kernel": "~6.0|~7.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^2.9",
+                "laravel/pint": "~1.0",
+                "pestphp/pest": "^2.34"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ArtisanSdk\\RateLimiter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel LaBarge",
+                    "email": "daniel@artisanmade.io"
+                }
+            ],
+            "description": "A leaky bucket rate limiter and corresponding middleware with route-level granularity compatible with Laravel.",
+            "support": {
+                "issues": "https://github.com/artisansdk/ratelimiter/issues",
+                "source": "https://github.com/artisansdk/ratelimiter/tree/1.1.0"
+            },
+            "time": "2024-03-14T14:52:46+00:00"
         },
         {
             "name": "blade-ui-kit/blade-heroicons",
@@ -2353,6 +2401,75 @@
                 "source": "https://github.com/laravel/serializable-closure"
             },
             "time": "2024-09-23T13:33:08+00:00"
+        },
+        {
+            "name": "laravel/telescope",
+            "version": "v5.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/telescope.git",
+                "reference": "7ee46fbea8e3b01108575c8edf7377abddfe8bb9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/telescope/zipball/7ee46fbea8e3b01108575c8edf7377abddfe8bb9",
+                "reference": "7ee46fbea8e3b01108575c8edf7377abddfe8bb9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "laravel/framework": "^8.37|^9.0|^10.0|^11.0",
+                "php": "^8.0",
+                "symfony/console": "^5.3|^6.0|^7.0",
+                "symfony/var-dumper": "^5.0|^6.0|^7.0"
+            },
+            "require-dev": {
+                "ext-gd": "*",
+                "guzzlehttp/guzzle": "^6.0|^7.0",
+                "laravel/octane": "^1.4|^2.0|dev-develop",
+                "orchestra/testbench": "^6.40|^7.37|^8.17|^9.0",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^9.0|^10.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Telescope\\TelescopeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Telescope\\": "src/",
+                    "Laravel\\Telescope\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Mohamed Said",
+                    "email": "mohamed@laravel.com"
+                }
+            ],
+            "description": "An elegant debug assistant for the Laravel framework.",
+            "keywords": [
+                "debugging",
+                "laravel",
+                "monitoring"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/telescope/issues",
+                "source": "https://github.com/laravel/telescope/tree/v5.2.6"
+            },
+            "time": "2024-11-25T20:34:58+00:00"
         },
         {
             "name": "laravel/tinker",
@@ -5069,6 +5186,153 @@
                 }
             ],
             "time": "2024-08-27T18:56:10+00:00"
+        },
+        {
+            "name": "spatie/laravel-rate-limited-job-middleware",
+            "version": "2.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-rate-limited-job-middleware.git",
+                "reference": "619cffb302bf7d9b9ee8bab0249a00266c3a0271"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-rate-limited-job-middleware/zipball/619cffb302bf7d9b9ee8bab0249a00266c3a0271",
+                "reference": "619cffb302bf7d9b9ee8bab0249a00266c3a0271",
+                "shasum": ""
+            },
+            "require": {
+                "artisansdk/ratelimiter": "^1.1",
+                "illuminate/cache": "^8.0|^9.0|^10.0|^11.0",
+                "illuminate/redis": "^8.0|^9.0|^10.0|^11.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4.1",
+                "orchestra/testbench": "^6.23|^7.0|^8.0|^9.0",
+                "pestphp/pest": "^1.21|^2.34",
+                "phpunit/phpunit": "^9.5|^10.5",
+                "spatie/pest-plugin-test-time": "^1.0|^2.0",
+                "symfony/var-dumper": "^5.4|^6.0|^7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\RateLimitedMiddleware\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A middleware that can rate limit jobs",
+            "homepage": "https://github.com/spatie/laravel-rate-limited-job-middleware",
+            "keywords": [
+                "laravel-rate-limited-job-middleware",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-rate-limited-job-middleware/issues",
+                "source": "https://github.com/spatie/laravel-rate-limited-job-middleware/tree/2.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-09-07T09:22:59+00:00"
+        },
+        {
+            "name": "spatie/laravel-translatable",
+            "version": "6.9.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-translatable.git",
+                "reference": "5f0712701a71054ba9bd6693808c4748f1f4ebda"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-translatable/zipball/5f0712701a71054ba9bd6693808c4748f1f4ebda",
+                "reference": "5f0712701a71054ba9bd6693808c4748f1f4ebda",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^9.0|^10.0|^11.0",
+                "illuminate/support": "^9.0|^10.0|^11.0",
+                "php": "^8.0",
+                "spatie/laravel-package-tools": "^1.11"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.64",
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^7.0|^8.0|^9.0",
+                "pestphp/pest": "^1.20|^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "aliases": {
+                    "Translatable": "Spatie\\Translatable\\Facades\\Translatable"
+                },
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Translatable\\TranslatableServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Translatable\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Sebastian De Deyne",
+                    "email": "sebastian@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A trait to make an Eloquent model hold translations",
+            "homepage": "https://github.com/spatie/laravel-translatable",
+            "keywords": [
+                "eloquent",
+                "i8n",
+                "laravel-translatable",
+                "model",
+                "multilingual",
+                "spatie",
+                "translate"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-translatable/issues",
+                "source": "https://github.com/spatie/laravel-translatable/tree/6.9.3"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-12-16T12:58:20+00:00"
         },
         {
             "name": "symfony/clock",
