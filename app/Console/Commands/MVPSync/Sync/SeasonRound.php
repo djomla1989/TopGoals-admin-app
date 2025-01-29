@@ -10,14 +10,14 @@ use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 
-class SeasonStanding extends Command
+class SeasonRound extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:season-standing';
+    protected $signature = 'app:season-rounds';
 
     /**
      * The console command description.
@@ -40,15 +40,13 @@ class SeasonStanding extends Command
             ->get();
 
         foreach ($seasons as $season) {
-            $this->info("Syncing season standing: {$season->name} - {$season->id}");
+            $this->info("Syncing season rounds: {$season->name} - {$season->id}");
 
             Bus::chain([
-                new SyncSeasonStandingJob($season),
-                new SyncSeasonStandingJob($season, SyncSeasonStandingJob::STANDING_TYPE_HOME),
-                new SyncSeasonStandingJob($season, SyncSeasonStandingJob::STANDING_TYPE_AWAY),
+                new SyncSeasonRoundsJob($season),
             ])->onQueue('default')->dispatch();
         }
 
-        $this->info('Synced seasons standing');
+        $this->info('Synced seasons rounds');
     }
 }

@@ -156,4 +156,9 @@ class Player extends BaseModel
 
         return $this;
     }
+
+    public function getPosition(): ?string
+    {
+        return $this->position;
+    }
 }

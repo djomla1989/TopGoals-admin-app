@@ -12,7 +12,7 @@ class Integer implements CastsAttributes
      *
      * @param  array<string, mixed>  $attributes
      */
-    public function get(Model $model, string $key, mixed $value, array $attributes): mixed
+    public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         return (int) floor($value * 1000);
     }
@@ -22,7 +22,7 @@ class Integer implements CastsAttributes
      *
      * @param  array<string, mixed>  $attributes
      */
-    public function set(Model $model, string $key, mixed $value, array $attributes): mixed
+    public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
         return $value / 1000;
     }
