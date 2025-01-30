@@ -94,7 +94,7 @@ class Player extends BaseModel
         return $this;
     }
 
-    public function setGender(string $gender): self
+    public function setGender(?string $gender): self
     {
         $this->gender = $gender;
 
@@ -108,7 +108,7 @@ class Player extends BaseModel
         return $this;
     }
 
-    public function setJerseyNumber(int $jerseyNumber): self
+    public function setJerseyNumber(?int $jerseyNumber): self
     {
         $this->jersey_number = $jerseyNumber;
 

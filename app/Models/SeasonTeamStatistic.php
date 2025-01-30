@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $season_id
  * @property int $team_id
  * @property int $matches
- * @property int $avg_rating
+ * @property mixed $avg_rating
  * @property int $goals_scored
  * @property int $goals_conceded
  * @property int $big_chances
@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $hit_woodwork
  * @property int $yellow_cards
  * @property int $red_cards
- * @property int $average_ball_possession
+ * @property mixed $average_ball_possession
  * @property int $accurate_passes
  * @property int $accurate_long_balls
  * @property int $accurate_crosses
@@ -57,17 +57,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $fast_break_goals
  * @property int $fast_break_shots
  * @property int $total_passes
- * @property int $accurate_passes_percentage
+ * @property mixed $accurate_passes_percentage
  * @property int $total_own_half_passes
  * @property int $accurate_own_half_passes
- * @property int $accurate_own_half_passes_percentage
+ * @property mixed $accurate_own_half_passes_percentage
  * @property int $total_opposition_half_passes
  * @property int $accurate_opposition_half_passes
- * @property int $accurate_opposition_half_passes_percentage
+ * @property mixed $accurate_opposition_half_passes_percentage
  * @property int $total_long_balls
- * @property int $accurate_long_balls_percentage
+ * @property mixed $accurate_long_balls_percentage
  * @property int $total_crosses
- * @property int $accurate_crosses_percentage
+ * @property mixed $accurate_crosses_percentage
  * @property int $saves
  * @property int $errors_leading_to_goal
  * @property int $errors_leading_to_shot
@@ -75,13 +75,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $last_man_tackles
  * @property int $total_duels
  * @property int $duels_won
- * @property int $duels_won_percentage
+ * @property mixed $duels_won_percentage
  * @property int $total_ground_duels
  * @property int $ground_duels_won
- * @property int $ground_duels_won_percentage
+ * @property mixed $ground_duels_won_percentage
  * @property int $total_aerial_duels
  * @property int $aerial_duels_won
- * @property int $aerial_duels_won_percentage
+ * @property mixed $aerial_duels_won_percentage
  * @property int $possession_lost
  * @property int $offsides
  * @property int $yellow_red_cards
@@ -114,6 +114,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $shots_off_target_against
  * @property int $shots_on_target_against
  * @property int $blocked_scoring_attempt_against
+ * @property mixed $overall_ball_possession
  * @property ?\DateTime $last_sync
  * @property Season $season
  * @property Team $team

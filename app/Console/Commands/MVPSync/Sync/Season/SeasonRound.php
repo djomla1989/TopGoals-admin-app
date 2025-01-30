@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Console\Commands\MVPSync\Sync;
+namespace App\Console\Commands\MVPSync\Sync\Season;
 
 use App\Jobs\Sync\Season\SyncSeasonRoundsJob;
-use App\Jobs\Sync\Season\SyncSeasonStandingJob;
-use App\Jobs\Sync\Season\SyncSeasonStatisticJob;
 use App\Models\Season;
 use Carbon\Carbon;
 use Illuminate\Console\Command;

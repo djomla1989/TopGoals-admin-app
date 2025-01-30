@@ -47,3 +47,15 @@ Artisan::command('inspire', function () {
 //Artisan::command('app:match-lineup', function () {
 //    $this->comment('Syncing match lineups');
 //})->purpose('Sync match lineups');
+
+//Artisan::command('app:season-rounds', function () {
+//    $this->comment('Syncing season rounds');
+//})->purpose('Sync season rounds');
+
+//Artisan::command('aapp:season-round-team-of-the-week', function () {
+//    $this->comment('Syncing season round team of the week');
+//})->purpose('Sync season round team of the week');
+
+//Artisan::command('app:player-season-statistic-command', function () {
+//    $this->comment('Syncing player season statistic');
+//})->purpose('Syncing player season statistic');

@@ -19,11 +19,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $saves
  * @property int|null $minute_played
  * @property int|null $touches
- * @property int|null $rating
+ * @property mixed $rating
  * @property int|null $possession_lost_ctrl
  * @property int|null $rating_versions_original
  * @property int|null $rating_versions_alternative
- * @property int|null $goals_prevented
+ * @property mixed $goals_prevented
  * @property int|null $aerial_lost
  * @property int|null $aerial_won
  * @property int|null $duel_lost
@@ -41,8 +41,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $fouls
  * @property int|null $total_offside
  * @property int|null $minutes_played
- * @property int|null $expected_goals
- * @property int|null $expected_assists
+ * @property mixed $expected_goals
+ * @property mixed $expected_assists
  * @property int|null $key_pass
  * @property int|null $penalty_miss
  * @property MatchLineupPlayer $matchLineupPlayer
@@ -167,7 +167,7 @@ class PlayerMatchStatistic extends BaseModel
         return $this;
     }
 
-    public function setRating(?int $rating): self
+    public function setRating(mixed $rating): self
     {
         $this->rating = $rating;
         return $this;
@@ -191,7 +191,7 @@ class PlayerMatchStatistic extends BaseModel
         return $this;
     }
 
-    public function setGoalsPrevented(?int $goalsPrevented): self
+    public function setGoalsPrevented(mixed $goalsPrevented): self
     {
         $this->goals_prevented = $goalsPrevented;
         return $this;
@@ -299,7 +299,7 @@ class PlayerMatchStatistic extends BaseModel
         return $this;
     }
 
-    public function setExpectedGoals(?int $expectedGoals): self
+    public function setExpectedGoals(mixed $expectedGoals): self
     {
         $this->expected_goals = $expectedGoals;
         return $this;
@@ -317,7 +317,7 @@ class PlayerMatchStatistic extends BaseModel
         return $this;
     }
 
-    public function setExpectedAssists(?int $expectedAssists): self
+    public function setExpectedAssists(mixed $expectedAssists): self
     {
         $this->expected_assists = $expectedAssists;
         return $this;

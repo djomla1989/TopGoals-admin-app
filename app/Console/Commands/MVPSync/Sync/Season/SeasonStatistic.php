@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Console\Commands\MVPSync\Sync;
+namespace App\Console\Commands\MVPSync\Sync\Season;
 
-use App\Jobs\Sync\Season\SyncSeasonRoundsTeamOfTheWeekPlayerJob;
+use App\Jobs\Sync\Season\SyncSeasonStatisticJob;
+use App\Models\Season;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
-use App\Models\SeasonRound;
 
-class SeasonRoundTeamOfTheWeek extends Command
+class SeasonStatistic extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:season-round-team-of-the-week';
+    protected $signature = 'app:season-statistic';
 
     /**
      * The console command description.
@@ -29,24 +29,22 @@ class SeasonRoundTeamOfTheWeek extends Command
      */
     public function handle()
     {
-        $seasonRounds = SeasonRound::query()
+        $seasons = Season::query()
+            ->where('is_active', true)
             ->where(function ($query) {
                 $query->whereNull('last_sync')
                     ->orWhere('last_sync', '<=', Carbon::now()->subDay());
             })
             ->get();
 
-        /** @var SeasonRound $seasonRound */
-        foreach ($seasonRounds as $seasonRound) {
-            $this->info("Syncing season rounds: {$seasonRound->name} - {$seasonRound->id}");
+        foreach ($seasons as $season) {
+            $this->info("Syncing season matches: {$season->name} - {$season->id}");
 
             Bus::chain([
-                new SyncSeasonRoundsTeamOfTheWeekPlayerJob($seasonRound),
+                new SyncSeasonStatisticJob($season),
             ])->onQueue('default')->dispatch();
-
-            //$seasonRound->setLastSync(Carbon::now())->save();
         }
 
-        $this->info('Synced seasons round team of the week');
+        $this->info('Synced seasons statistic');
     }
 }

@@ -14,6 +14,9 @@ class Integer implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
+        if ($value === null) {
+            return null;
+        }
         return (int) floor($value * 1000);
     }
 
@@ -24,6 +27,9 @@ class Integer implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
+        if ($value === null) {
+            return null;
+        }
         return $value / 1000;
     }
 }

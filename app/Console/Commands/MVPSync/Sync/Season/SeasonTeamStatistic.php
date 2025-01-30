@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\MVPSync\Sync;
+namespace App\Console\Commands\MVPSync\Sync\Season;
 
 use Illuminate\Console\Command;
 

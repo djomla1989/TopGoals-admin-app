@@ -1,71 +1,159 @@
 <?php
 
-use App\Http\Controllers\Mapper\MappingCategory;
-use App\Http\Controllers\Mapper\MapSeasonsController;
-use App\Http\Controllers\Mapper\MapTournamentController;
-use App\Http\Controllers\Mapper\MapTournamentSeasonsController;
-use App\Services\DataImporters\Mappers\FuzzySearch;
-use FuzzyWuzzy\Fuzz;
-use FuzzyWuzzy\Process;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
+namespace App\Jobs\Sync\Player;
 
-Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('welcome');
-    });
+use App\Builder\Player\PlayerBuilder;
+use App\Builder\Player\PlayerSeasonStatisticBuilder;
+use App\Jobs\Sync\AbstractSyncJob;
+use App\Models\Season;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
 
-    Route::get('/mladen', function (){
-        function transformPlayerStatistics(array $data): array
-        {
-            $players = [];
+class SyncPlayerSeasonStatisticJob extends AbstractSyncJob implements ShouldQueue, ShouldBeUnique
+{
+    use Queueable;
 
-            foreach ($data['data'] as $key => $statsArray) {
-                foreach ($statsArray as $stat) {
-                    $playerId = $stat['player']['id'];
+    const SEASON_STATISTIC_TYPE_OVERALL = 'overall';
 
-                    if (!isset($players[$playerId])) {
-                        $players[$playerId] = [
-                            'player' => $stat['player'],
-                            'data' => []
-                        ];
-                    }
+    private Season $season;
 
-                    $players[$playerId]['data'][$key] = $stat['statistics'][$key] ?? null;
+    private string $type;
 
-                    if (isset($stat['statistics']['penaltiesTaken'])) {
-                        $players[$playerId]['data']['penaltiesTaken'] = $stat['statistics']['penaltiesTaken'] ?? null;
-                    }
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(Season $season, string $type = self::SEASON_STATISTIC_TYPE_OVERALL)
+    {
+        $this->season = $season;
+        $this->type = $type;
+    }
 
-                    if (isset($stat['statistics']['shotFromSetPiece'])) {
-                        $players[$playerId]['data']['shotFromSetPiece'] = $stat['statistics']['shotFromSetPiece'] ?? null;
-                    }
+    public function uniqueId(): string
+    {
+        return get_class($this->season) . '-top-players-' . $this->season->id;
+    }
 
-                    if (isset($stat['statistics']['accuratePassesPercentage'])) {
-                        $players[$playerId]['data']['accuratePassesPercentage'] = $stat['statistics']['accuratePassesPercentage'] ?? null;
-                    }
+    public function failed(\Throwable $exception): void
+    {
+        info('Season top players data sync failed', [
+            'season' => $this->season->id,
+            'exception' => $exception->getMessage()
+        ]);
+    }
 
-                    if (isset($stat['statistics']['successfulDribblesPercentage'])) {
-                        $players[$playerId]['data']['successfulDribblesPercentage'] = $stat['statistics']['successfulDribblesPercentage'] ?? null;
-                    }
-
-                    if (isset($stat['statistics']['id'])) {
-                        $players[$playerId]['data']['id'] = $stat['statistics']['id'] ?? null;
-                    }
-
-                    if (isset($stat['statistics']['type'])) {
-                        $players[$playerId]['data']['type'] = $stat['statistics']['type'] ?? null;
-                    }
-                }
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+        try {
+            if (false === config('sync.syncInactive') && $this->season->getIsActive() === false) {
+                info('Season is inactive', ['season' => $this->season->id]);
+                return;
             }
 
-            return array_values($players);
+            $lastSync = $this->season->getLastSync();
+
+            if (!empty($lastSync) && $this->getLastSyncComparatorDate()->lessThan($lastSync)) {
+                info('Season last sync is less than a day', ['season' => $this->seasonRound->season->getId()]);
+                return;
+            }
+
+            //$data = $this->getData($this->getUrl());
+            $data = $this->getExampleData();
+
+            $data = $data['data'] ?? [];
+
+            if (empty($data)) {
+                info('Season top players missing data', ['season' => $this->season->getId()]);
+                return;
+            }
+
+            $playerStatistics = $this->transformPlayerStatistics($data);
+
+            foreach ($playerStatistics as $playerStat) {
+                $player = PlayerBuilder::build($playerStat['player'], $this->season->tournament->sport);
+                $player->save();
+
+                $playerSeasonStatistic = PlayerSeasonStatisticBuilder::build($player, $this->season, $playerStat['data']);
+                $playerSeasonStatistic->save();
+            }
+
+            info('Season top players data synced', ['season' => $this->season->getId()]);
+        } catch (\Throwable $exception) {
+            info('Season round team of the week players data sync failed', [
+                'season' => $this->season->getId(),
+                'exception' => $exception->getMessage()
+            ]);
+        }
+    }
+
+    public function getUrl(): string
+    {
+        return sprintf(
+            'seasons/players-statistics/result?unique_tournament_id=%s&seasons_statistics_type=%s&seasons_id=%s',
+            $this->season->getSourceId(),
+            $this->type,
+            $this->season->tournament->getSourceId(),
+        );
+    }
+
+    private function transformPlayerStatistics(array $data): array
+    {
+        $players = [];
+
+        foreach ($data as $key => $statsArray) {
+            foreach ($statsArray as $stat) {
+                $playerId = $stat['player']['id'];
+
+                if (!isset($players[$playerId])) {
+                    $players[$playerId] = [
+                        'player' => $stat['player'],
+                        'data' => []
+                    ];
+                }
+
+                $players[$playerId]['data'][$key] = $stat['statistics'][$key] ?? null;
+
+                if (isset($stat['statistics']['penaltiesTaken'])) {
+                    $players[$playerId]['data']['penaltiesTaken'] = $stat['statistics']['penaltiesTaken'] ?? null;
+                }
+
+                if (isset($stat['statistics']['shotFromSetPiece'])) {
+                    $players[$playerId]['data']['shotFromSetPiece'] = $stat['statistics']['shotFromSetPiece'] ?? null;
+                }
+
+                if (isset($stat['statistics']['accuratePassesPercentage'])) {
+                    $players[$playerId]['data']['accuratePassesPercentage'] = $stat['statistics']['accuratePassesPercentage'] ?? null;
+                }
+
+                if (isset($stat['statistics']['successfulDribblesPercentage'])) {
+                    $players[$playerId]['data']['successfulDribblesPercentage'] = $stat['statistics']['successfulDribblesPercentage'] ?? null;
+                }
+
+                if (isset($stat['statistics']['id'])) {
+                    $players[$playerId]['data']['id'] = $stat['statistics']['id'] ?? null;
+                }
+
+                if (isset($stat['statistics']['type'])) {
+                    $players[$playerId]['data']['type'] = $stat['statistics']['type'] ?? null;
+                }
+
+                if (isset($stat['statistics']['appearances'])) {
+                    $players[$playerId]['data']['appearances'] = $stat['statistics']['appearances'] ?? null;
+                }
+
+            }
         }
 
-        function getExampleData(): array
-        {
+        return array_values($players);
+    }
 
-            $json = '{
+    public function getExampleData(): array
+    {
+
+        $json = '{
         "data": {
             "rating": [
 			{
@@ -71350,48 +71438,7 @@ Route::middleware('auth')->group(function () {
 		]
 	}
 }';
-            return json_decode($json, true);
+        return json_decode($json, true);
 
-        }
-
-        $playerStats = transformPlayerStatistics(getExampleData());
-        dd($playerStats);
-    });
-
-    Route::get('/test', function () {
-
-        DB::connection('mongodb')->enableQueryLog();
-
-        DB::listen(function ($query) {
-            Log::debug('Mongo Query: '.json_encode($query->bindings));
-        });
-
-        $conn = DB::connection('mongodb');
-
-        $tournamentMeta = $conn->table('categories')
-            ->where('id', '1467')->get();
-
-        $tournamentMeta = $conn->table('uniqueTournamentMeta')->where('uniqueTournament.id', 42)->get();
-
-        return 'test';
-    });
-
-    Route::get('/connect', function (){
-        $conn = DB::connection('mysqlSportRadar');
-        $tournamentList = $conn->table('sports')->orderBy('name')->get();
-        return $tournamentList;
-    });
-
-    Route::get('/map/category', [MappingCategory::class, 'index'])->name('mapping.category.index');
-    Route::post('/map/category', [MappingCategory::class, 'store'])->name('mapping.category.store');
-    Route::post('/map/category/auto', [MappingCategory::class, 'autoMap'])->name('mapping.category.auto');
-
-    Route::get('/map/tournament', [MapTournamentController::class, 'index'])->name('mapping.tournament.index');
-    Route::get('/map/tournament/{dataMapping}/{debug?}', [MapTournamentController::class, 'mapTournament'])->name('mapping.tournament.mapTournament');
-    Route::post('/map/tournament/{dataMapping}', [MapTournamentController::class, 'store'])->name('mapping.tournament.store');
-    Route::get('/map/seasons', [MapSeasonsController::class, 'index'])->name('mapping.seasons.index');
-
-    Route::get('/map/seasons', [MapTournamentSeasonsController::class, 'index'])->name('mapping.tournament.season.index');
-    Route::get('/map/seasons/{dataMapping}/{debug?}', [MapTournamentSeasonsController::class, 'mapSeason'])->name('mapping.tournament.season.mapSeason');
-    Route::post('/map/seasons/{dataMapping}', [MapTournamentSeasonsController::class, 'store'])->name('mapping.tournament.season.store');
-});
+    }
+}

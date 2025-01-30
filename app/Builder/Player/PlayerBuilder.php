@@ -19,10 +19,10 @@ class PlayerBuilder
         $player->setSport($sport);
         $player->setName($data['name'] ?? '');
         $player->setSlug($data['slug'] ?? '');
-        $player->setJerseyNumber($data['jerseyNumber'] ?? '');
+        $player->setJerseyNumber($data['jerseyNumber'] ?? null);
         $player->setDateOfBirth(Carbon::parse($data['dateOfBirthTimestamp'] ?? '', DateTimeHelper::DEFAULT_TIMEZONE));
         $player->setGender($data['gender'] ?? 'M');
-        $player->setPosition($data['position'] ?? '');
+        $player->setPosition($data['position'] ?? null);
         $player->setHeight($data['height'] ?? null);
         $player->setWeight($data['weight'] ?? null);
         $player->setCountryCode($data['country']['alpha2'] ?? '');
