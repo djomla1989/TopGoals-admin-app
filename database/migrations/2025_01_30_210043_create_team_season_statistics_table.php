@@ -1,0 +1,141 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('team_season_statistics', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('team_id')->constrained()->onDelete('cascade');
+            $table->foreignId('season_id')->constrained()->onDelete('cascade');
+            $table->integer('source_id');
+            $table->string('type');
+            $table->integer('matches')->nullable();
+            $table->integer('awarded_matches')->nullable();
+            $table->integer('goals_scored')->nullable();
+            $table->integer('goals_conceded')->nullable();
+            $table->integer('own_goals')->nullable();
+            $table->integer('assists')->nullable();
+            $table->integer('shots')->nullable();
+            $table->integer('penalty_goals')->nullable();
+            $table->integer('penalties_taken')->nullable();
+            $table->integer('free_kick_goals')->nullable();
+            $table->integer('free_kick_shots')->nullable();
+            $table->integer('goals_from_inside_the_box')->nullable();
+            $table->integer('goals_from_outside_the_box')->nullable();
+            $table->integer('shots_from_inside_the_box')->nullable();
+            $table->integer('shots_from_outside_the_box')->nullable();
+            $table->integer('headed_goals')->nullable();
+            $table->integer('left_foot_goals')->nullable();
+            $table->integer('right_foot_goals')->nullable();
+            $table->integer('big_chances')->nullable();
+            $table->integer('big_chances_created')->nullable();
+            $table->integer('big_chances_missed')->nullable();
+            $table->integer('shots_on_target')->nullable();
+            $table->integer('shots_off_target')->nullable();
+            $table->integer('blocked_scoring_attempt')->nullable();
+            $table->integer('successful_dribbles')->nullable();
+            $table->integer('dribble_attempts')->nullable();
+            $table->integer('corners')->nullable();
+            $table->integer('hit_woodwork')->nullable();
+            $table->integer('fast_breaks')->nullable();
+            $table->integer('fast_break_goals')->nullable();
+            $table->integer('fast_break_shots')->nullable();
+            $table->integer('average_ball_possession')->nullable();
+            $table->integer('total_passes')->nullable();
+            $table->integer('accurate_passes')->nullable();
+            $table->integer('accurate_passes_percentage')->nullable();
+            $table->integer('total_own_half_passes')->nullable();
+            $table->integer('accurate_own_half_passes')->nullable();
+            $table->integer('accurate_own_half_passes_percentage')->nullable();
+            $table->integer('total_opposition_half_passes')->nullable();
+            $table->integer('accurate_opposition_half_passes')->nullable();
+            $table->integer('accurate_opposition_half_passes_percentage')->nullable();
+            $table->integer('total_long_balls')->nullable();
+            $table->integer('accurate_long_balls')->nullable();
+            $table->integer('accurate_long_balls_percentage')->nullable();
+            $table->integer('total_crosses')->nullable();
+            $table->integer('accurate_crosses')->nullable();
+            $table->integer('accurate_crosses_percentage')->nullable();
+            $table->integer('clean_sheets')->nullable();
+            $table->integer('tackles')->nullable();
+            $table->integer('interceptions')->nullable();
+            $table->integer('saves')->nullable();
+            $table->integer('errors_leading_to_goal')->nullable();
+            $table->integer('errors_leading_to_shot')->nullable();
+            $table->integer('penalties_commited')->nullable();
+            $table->integer('penalty_goals_conceded')->nullable();
+            $table->integer('clearances')->nullable();
+            $table->integer('clearances_off_line')->nullable();
+            $table->integer('last_man_tackles')->nullable();
+            $table->integer('total_duels')->nullable();
+            $table->integer('duels_won')->nullable();
+            $table->integer('duels_won_percentage')->nullable();
+            $table->integer('total_ground_duels')->nullable();
+            $table->integer('ground_duels_won')->nullable();
+            $table->integer('ground_duels_won_percentage')->nullable();
+            $table->integer('total_aerial_duels')->nullable();
+            $table->integer('aerial_duels_won')->nullable();
+            $table->integer('aerial_duels_won_percentage')->nullable();
+            $table->integer('possession_lost')->nullable();
+            $table->integer('offsides')->nullable();
+            $table->integer('fouls')->nullable();
+            $table->integer('yellow_cards')->nullable();
+            $table->integer('yellow_red_cards')->nullable();
+            $table->integer('red_cards')->nullable();
+            $table->integer('avg_rating')->nullable();
+            $table->integer('accurate_final_third_passes_against')->nullable();
+            $table->integer('accurate_opposition_half_passes_against')->nullable();
+            $table->integer('accurate_own_half_passes_against')->nullable();
+            $table->integer('accurate_passes_against')->nullable();
+            $table->integer('big_chances_against')->nullable();
+            $table->integer('big_chances_created_against')->nullable();
+            $table->integer('big_chances_missed_against')->nullable();
+            $table->integer('clearances_against')->nullable();
+            $table->integer('corners_against')->nullable();
+            $table->integer('crosses_successful_against')->nullable();
+            $table->integer('crosses_total_against')->nullable();
+            $table->integer('dribble_attempts_total_against')->nullable();
+            $table->integer('dribble_attempts_won_against')->nullable();
+            $table->integer('errors_leading_to_goal_against')->nullable();
+            $table->integer('errors_leading_to_shot_against')->nullable();
+            $table->integer('hit_woodwork_against')->nullable();
+            $table->integer('interceptions_against')->nullable();
+            $table->integer('key_passes_against')->nullable();
+            $table->integer('long_balls_successful_against')->nullable();
+            $table->integer('long_balls_total_against')->nullable();
+            $table->integer('offsides_against')->nullable();
+            $table->integer('red_cards_against')->nullable();
+            $table->integer('shots_against')->nullable();
+            $table->integer('shots_blocked_against')->nullable();
+            $table->integer('shots_from_inside_the_box_against')->nullable();
+            $table->integer('shots_from_outside_the_box_against')->nullable();
+            $table->integer('shots_off_target_against')->nullable();
+            $table->integer('shots_on_target_against')->nullable();
+            $table->integer('blocked_scoring_attempt_against')->nullable();
+            $table->integer('tackles_against')->nullable();
+            $table->integer('total_final_third_passes_against')->nullable();
+            $table->integer('opposition_half_passes_total_against')->nullable();
+            $table->integer('own_half_passes_total_against')->nullable();
+            $table->integer('total_passes_against')->nullable();
+            $table->integer('yellow_cards_against')->nullable();
+            $table->timestamps();
+        });
+
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('team_season_statistics');
+    }
+};

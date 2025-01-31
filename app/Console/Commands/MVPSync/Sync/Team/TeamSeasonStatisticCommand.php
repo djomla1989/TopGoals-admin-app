@@ -1,22 +1,21 @@
 <?php
 
-namespace App\Console\Commands\MVPSync\Sync\Player;
+namespace App\Console\Commands\MVPSync\Sync\Team;
 
-use App\Jobs\Sync\Player\SyncPlayerSeasonStatisticJob;
-use App\Jobs\Sync\Season\SyncSeasonRoundsJob;
+use App\Jobs\Sync\Team\TeamSeasonStatisticJob;
 use App\Models\Season;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Bus;
 
-class PlayerSeasonStatisticCommand extends Command
+class TeamSeasonStatisticCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:player-season-statistic-command';
+    protected $signature = 'app:team-season-statistic-command';
 
     /**
      * The console command description.
@@ -39,13 +38,13 @@ class PlayerSeasonStatisticCommand extends Command
             ->get();
 
         foreach ($seasons as $season) {
-            $this->info("Syncing season players: {$season->name} - {$season->id}");
+            $this->info("Syncing season top teams: {$season->name} - {$season->id}");
 
             Bus::chain([
-                new SyncPlayerSeasonStatisticJob($season),
+                new TeamSeasonStatisticJob($season),
             ])->onQueue('default')->dispatch();
         }
 
-        $this->info('Synced seasons top players');
+        $this->info('Synced seasons top teams');
     }
 }

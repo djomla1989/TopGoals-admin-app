@@ -59,3 +59,8 @@ Artisan::command('inspire', function () {
 //Artisan::command('app:player-season-statistic-command', function () {
 //    $this->comment('Syncing player season statistic');
 //})->purpose('Syncing player season statistic');
+
+
+//Artisan::command('app:team-season-statistic-command', function () {
+//    $this->comment('Syncing team season statistic');
+//})->purpose('Syncing team season statistic');
