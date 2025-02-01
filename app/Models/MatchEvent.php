@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property int|null $round_number
  * @property \DateTime $start_date
  * @property string $status
+ * @property string $match_status
  * @property int|null $home_score
  * @property int|null $away_score
  * @property int|null $winner_id
@@ -55,6 +56,7 @@ class MatchEvent extends BaseModel
         'round_number',
         'start_date',
         'status',
+        'match_status',
         'home_score',
         'away_score',
         'winner_id',
@@ -167,13 +169,13 @@ class MatchEvent extends BaseModel
         return $this;
     }
 
-    public function setHomeScore(int $current): self
+    public function setHomeScore(?int $current): self
     {
         $this->home_score = $current;
         return $this;
     }
 
-    public function setAwayScore(int $current): self
+    public function setAwayScore(?int $current): self
     {
         $this->away_score = $current;
         return $this;
@@ -200,6 +202,12 @@ class MatchEvent extends BaseModel
     public function setStatus(mixed $type): self
     {
         $this->status = $type;
+        return $this;
+    }
+
+    public function setMatchStatus(string $type): self
+    {
+        $this->match_status = $type;
         return $this;
     }
 

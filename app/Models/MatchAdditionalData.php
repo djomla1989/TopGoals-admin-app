@@ -85,25 +85,25 @@ class MatchAdditionalData extends BaseModel
         return $this;
     }
 
-    public function setHasGlobalHighlights(bool $hasGlobalHighlights): self
+    public function setHasGlobalHighlights(?bool $hasGlobalHighlights): self
     {
         $this->has_global_highlights = $hasGlobalHighlights;
         return $this;
     }
 
-    public function setHasXg(bool $hasXg): self
+    public function setHasXg(?bool $hasXg): self
     {
         $this->has_xg = $hasXg;
         return $this;
     }
 
-    public function setHasEventPlayerStatistics(bool $hasEventPlayerStatistics): self
+    public function setHasEventPlayerStatistics(?bool $hasEventPlayerStatistics): self
     {
         $this->has_event_player_statistics = $hasEventPlayerStatistics;
         return $this;
     }
 
-    public function setHasEventPlayerHeatMap(bool $hasEventPlayerHeatMap): self
+    public function setHasEventPlayerHeatMap(?bool $hasEventPlayerHeatMap): self
     {
         $this->has_event_player_heatmap = $hasEventPlayerHeatMap;
         return $this;
@@ -147,7 +147,7 @@ class MatchAdditionalData extends BaseModel
         return $this->home_score_period1;
     }
 
-    public function setHomeScorePeriod1(int $homeScorePeriod1): self
+    public function setHomeScorePeriod1(?int $homeScorePeriod1): self
     {
         $this->home_score_period1 = $homeScorePeriod1;
         return $this;
@@ -158,7 +158,7 @@ class MatchAdditionalData extends BaseModel
         return $this->home_score_period2;
     }
 
-    public function setHomeScorePeriod2(int $homeScorePeriod2): self
+    public function setHomeScorePeriod2(?int $homeScorePeriod2): self
     {
         $this->home_score_period2 = $homeScorePeriod2;
         return $this;
@@ -169,7 +169,7 @@ class MatchAdditionalData extends BaseModel
         return $this->away_score_period1;
     }
 
-    public function setAwayScorePeriod1(int $awayScorePeriod1): self
+    public function setAwayScorePeriod1(?int $awayScorePeriod1): self
     {
         $this->away_score_period1 = $awayScorePeriod1;
         return $this;
@@ -180,7 +180,7 @@ class MatchAdditionalData extends BaseModel
         return $this->away_score_period2;
     }
 
-    public function setAwayScorePeriod2(int $awayScorePeriod2): self
+    public function setAwayScorePeriod2(?int $awayScorePeriod2): self
     {
         $this->away_score_period2 = $awayScorePeriod2;
         return $this;
@@ -191,7 +191,7 @@ class MatchAdditionalData extends BaseModel
         return $this->home_score_normal_time;
     }
 
-    public function setHomeScoreNormalTime(int $homeScoreNormalTime): self
+    public function setHomeScoreNormalTime(?int $homeScoreNormalTime): self
     {
         $this->home_score_normal_time = $homeScoreNormalTime;
         return $this;
@@ -202,7 +202,7 @@ class MatchAdditionalData extends BaseModel
         return $this->away_score_normal_time;
     }
 
-    public function setAwayScoreNormalTime(int $awayScoreNormalTime): self
+    public function setAwayScoreNormalTime(?int $awayScoreNormalTime): self
     {
         $this->away_score_normal_time = $awayScoreNormalTime;
         return $this;

@@ -13,10 +13,10 @@ class MatchAdditionalDataBuilder
         $matchAdditionalData = MatchAdditionalData::firstOrNew(['match_id' => $match->getId()]);
 
         $matchAdditionalData->setMatch($match);
-        $matchAdditionalData->setHasGlobalHighlights($data['hasGlobalHighlights']);
-        $matchAdditionalData->setHasXg($data['hasXg']);
-        $matchAdditionalData->setHasEventPlayerStatistics($data['hasEventPlayerStatistics']);
-        $matchAdditionalData->setHasEventPlayerHeatMap($data['hasEventPlayerHeatMap']);
+        $matchAdditionalData->setHasGlobalHighlights($data['hasGlobalHighlights'] ?? null);
+        $matchAdditionalData->setHasXg($data['hasXg'] ?? null);
+        $matchAdditionalData->setHasEventPlayerStatistics($data['hasEventPlayerStatistics'] ?? null);
+        $matchAdditionalData->setHasEventPlayerHeatMap($data['hasEventPlayerHeatMap'] ?? null);
         $matchAdditionalData->setWinnerCode($data['winnerCode'] ?? null);
         $matchAdditionalData->setInjuryTime1($data['time']['injuryTime1'] ?? null);
         $matchAdditionalData->setInjuryTime2($data['time']['injuryTime2'] ?? null);

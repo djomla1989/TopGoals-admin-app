@@ -8,12 +8,10 @@ use App\Builder\Season\SeasonTeamBuilder;
 use App\Builder\Team\TeamBuilder;
 use App\Jobs\Sync\AbstractSyncJob;
 use App\Models\Season;
-use App\Models\Sport;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Spatie\RateLimitedMiddleware\RateLimited;
 
 class SyncSeasonMatchesJob extends AbstractSyncJob implements ShouldQueue, ShouldBeUnique
 {
@@ -41,7 +39,7 @@ class SyncSeasonMatchesJob extends AbstractSyncJob implements ShouldQueue, Shoul
 
     public function uniqueId(): string
     {
-        return get_class($this->season) . '-matchess-' . $this->season->id;
+        return get_class($this->season) . '-matches-' . $this->season->id . '-' . $this->page . '-' . $this->courseEvents;
     }
 
     public function failed(\Throwable $exception): void
@@ -91,8 +89,13 @@ class SyncSeasonMatchesJob extends AbstractSyncJob implements ShouldQueue, Shoul
                 SyncSeasonMatchesJob::dispatch($this->season, $this->page, $this->courseEvents)->onQueue('default');
             }
         } catch (\Throwable $th) {
-            info('Error in creating match', ['season' => $this->season->id, 'message' => $th->getMessage()]);
+            info('Error in creating match', [
+                'season' => $this->season->id,
+                'message' => $th->getMessage() ."::". $th->getLine() ."::". $th->getFile()
+            ]);
         }
+
+        return;
     }
 
     private function createMatch(array $data): void
@@ -123,7 +126,13 @@ class SyncSeasonMatchesJob extends AbstractSyncJob implements ShouldQueue, Shoul
 
     private function getUrl(int $page, string $courseEvents): string
     {
-        return 'seasons/events?page=' . $page . '&seasons_id=' . $this->season->getSourceId() . '&unique_tournament_id=' . $this->season->tournament->getSourceId() . '&course_events=' . $courseEvents;
+        return sprintf(
+            'seasons/events?page=%d&seasons_id=%d&unique_tournament_id=%d&course_events=%s',
+            $page,
+            $this->season->getSourceId(),
+            $this->season->tournament->getSourceId(),
+            $courseEvents
+        );
     }
 
     private function getExampleData(): array

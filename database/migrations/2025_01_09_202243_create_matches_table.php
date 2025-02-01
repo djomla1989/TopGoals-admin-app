@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('round_number')->nullable();
             $table->dateTime('start_date');
             $table->string('status');
+            $table->string('match_status');
             $table->integer('home_score')->nullable();
             $table->integer('away_score')->nullable();
             $table->foreignId('winner_id')->nullable()->constrained('teams');
