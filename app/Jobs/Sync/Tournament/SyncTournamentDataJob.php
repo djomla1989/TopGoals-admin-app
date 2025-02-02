@@ -2,8 +2,10 @@
 
 namespace App\Jobs\Sync\Tournament;
 
-use App\Enums\Gender;
-use App\Enums\Tournament\TournamentAgeGroupEnum;
+use App\Builder\Team\TeamBuilder;
+use App\Builder\Tournament\TournamentAdditionalDataBuilder;
+use App\Builder\Tournament\TournamentBuilder;
+use App\Builder\Tournament\TournamentConnectedTournamentBuilder;
 use App\Jobs\Sync\AbstractSyncJob;
 use App\Models\Tournament;
 use Carbon\Carbon;
@@ -56,44 +58,63 @@ class SyncTournamentDataJob extends AbstractSyncJob implements ShouldQueue, Shou
      */
     public function handle(): void
     {
-        if (false === config('sync.syncInactive') && $this->tournament->getIsActive() === false) {
-            info('Tournament is inactive', ['tournament' => $this->tournament->id]);
-            return;
+        try {
+            if (false === config('sync.syncInactive') && $this->tournament->getIsActive() === false) {
+                info('Tournament is inactive', ['tournament' => $this->tournament->id]);
+                return;
+            }
+
+            $sync = Carbon::now()->subDay();
+            $lastSync = $this->tournament->getLastSync();
+
+            if ($lastSync && $sync->lessThan($lastSync)) {
+                return;
+            }
+
+            $url = $this->getUrl();
+
+            $data = $this->getData($url);
+            //$data = $this->getExampleData();
+            $data = $data['data'] ?? [];
+
+            if (empty($data)) {
+                info('Tournament data not found', ['tournament' => $this->tournament->id]);
+                return;
+            }
+
+            $tournament = TournamentBuilder::build($this->tournament->sport, $data);
+            $tournament->save();
+
+            foreach ($data['upperDivisions'] as $division) {
+                $tournament = TournamentBuilder::build($this->tournament->sport, $division);
+                $tournament->save();
+
+                $tournamentUpperLowerTournament = TournamentConnectedTournamentBuilder::build($this->tournament, $tournament, 'upper');
+                $tournamentUpperLowerTournament->save();
+            }
+
+            foreach ($data['lowerDivisions'] as $division) {
+                $tournament = TournamentBuilder::build($this->tournament->sport, $division);
+                $tournament->save();
+
+                $tournamentUpperLowerTournament = TournamentConnectedTournamentBuilder::build($this->tournament, $tournament, 'lower');
+                $tournamentUpperLowerTournament->save();
+            }
+
+            if ($data['titleHolder']) {
+                $titleHolderTeam = TeamBuilder::build($data['titleHolder'], $this->tournament->sport);
+                $titleHolderTeam->save();
+
+                $tournamentAdditionalData = TournamentAdditionalDataBuilder::build($this->tournament, $titleHolderTeam, $data);
+                $tournamentAdditionalData->save();
+            }
+
+        } catch (\Throwable $th) {
+            info('Tournament data sync failed', [
+                'tournament' => $this->tournament->id,
+                'exception' => $th->getMessage() . "::" . $th->getLine() . "::" . $th->getFile()
+            ]);
         }
-
-        $sync = Carbon::now()->subDay();
-        $lastSync = $this->tournament->getLastSync();
-
-        if ($lastSync && $sync->lessThan($lastSync)) {
-            return;
-        }
-
-        $url = $this->getUrl();
-
-        $data = $this->getData($url);
-        $data = $data['data'] ?? [];
-
-        if (empty($data)) {
-            info('Tournament data not found', ['tournament' => $this->tournament->id]);
-            return;
-        }
-
-        if (!empty($data['startDateTimestamp'])) {
-            $this->tournament->setStartDate(Carbon::createFromTimestamp($data['startDateTimestamp']));
-        }
-
-        if (!empty($data['endDateTimestamp'])) {
-            $this->tournament->setEndDate(Carbon::createFromTimestamp($data['endDateTimestamp']));
-        }
-
-        $this->tournament->setGender(Gender::resolveGender($data['gender'] ?? '', $data['name'])->value);
-        $this->tournament->setLastSync(Carbon::now());
-        $this->tournament->setAgeGroup(TournamentAgeGroupEnum::resolveAgeGroup($data['name'] ?? '')->value);
-        $this->tournament->setTier($data['tier'] ?? null);
-        $this->tournament->setNational($data['national'] ?? false);
-        $this->tournament->setHasGroups($data['hasGroups'] ?? false);
-        $this->tournament->save();
-
         info('Tournament data synced', ['tournament' => $this->tournament->id]);
     }
 
@@ -102,7 +123,7 @@ class SyncTournamentDataJob extends AbstractSyncJob implements ShouldQueue, Shou
         return 'unique-tournaments/data?unique_tournament_id=' . $this->tournament->getSourceId();
     }
 
-    private function exampleData(): array
+    private function getExampleData(): array
     {
         $jayParsedAry = [
             "data" => [

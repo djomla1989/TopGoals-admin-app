@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Category $category
  * @property Sport $sport
  */
-class Tournament extends Model
+class Tournament extends BaseModel
 {
     protected $table = 'tournaments';
 
@@ -84,6 +84,13 @@ class Tournament extends Model
         return $this->last_sync;
     }
 
+
+    public function setSport(Sport $sport): self
+    {
+        $this->sport()->associate($sport);
+        return $this;
+    }
+
     public function setStartDate(\DateTime $startDate): self
     {
         $this->start_date = $startDate;
@@ -114,7 +121,7 @@ class Tournament extends Model
         return $this;
     }
 
-    public function setTier(int $tier): self
+    public function setTier(?int $tier): self
     {
         $this->tier = $tier;
         return $this;

@@ -37,7 +37,7 @@ class TournamentSync extends Command
             ->get();
 
         foreach ($tournaments as $tournament) {
-            $this->info("Syncing tournament: {$tournament->name} - {$tournament->id}");
+            $this->info("Syncing tournament: {$tournament->name} - {$tournament->id} - {$tournament->source_id}");
             SyncTournamentDataJob::dispatch($tournament)->onQueue('default');
         }
 
