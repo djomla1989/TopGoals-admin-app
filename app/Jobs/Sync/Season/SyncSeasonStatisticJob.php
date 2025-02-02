@@ -3,6 +3,8 @@
 namespace App\Jobs\Sync\Season;
 
 use App\Builder\Season\SeasonStatisticBuilder;
+use App\Builder\Season\SeasonTeamBuilder;
+use App\Builder\Team\TeamBuilder;
 use App\Jobs\Sync\AbstractSyncJob;
 use App\Models\Season;
 use Carbon\Carbon;
@@ -34,31 +36,55 @@ class SyncSeasonStatisticJob extends AbstractSyncJob implements ShouldQueue, Sho
      */
     public function handle(): void
     {
-        if (false === config('sync.syncInactive') && $this->season->getIsActive() === false) {
-            info('Season is inactive', ['season' => $this->season->id]);
+        try {
+            if (false === config('sync.syncInactive') && $this->season->getIsActive() === false) {
+                info('Season is inactive', ['season' => $this->season->id]);
+                return;
+            }
+
+            $lastSync = $this->season->getLastSync();
+
+            if (!empty($lastSync) && $this->getLastSyncComparatorDate()->lessThan($lastSync)) {
+                info('Season last sync is less than a day', ['season' => $this->season->id]);
+                return;
+            }
+
+            $data = $this->getData($this->getUrl($this->season));
+            //$data = $this->getExampleData();
+
+            $data = $data['data'] ?? [];
+
+            if (empty($data)) {
+                info('Season statistic is empty', ['season' => $this->season->id]);
+                return;
+            }
+
+            $seasonStatistic = SeasonStatisticBuilder::build($this->season, $data);
+            $seasonStatistic->save();
+
+            if (!empty($data['newcomersUpperDivision'])) {
+                foreach ($data['newcomersUpperDivision'] as $newcomerTeam) {
+                    $team = TeamBuilder::build($newcomerTeam, $this->season->tournament->sport);
+                    $team->save();
+
+                    $seasonTeam = SeasonTeamBuilder::build($this->season, $team, true);
+                    $seasonTeam->save();
+                }
+            }
+
+            if (!empty($data['newcomersLowerDivision'])) {
+                foreach ($data['newcomersLowerDivision'] as $newcomerTeam) {
+                    $team = TeamBuilder::build($newcomerTeam, $this->season->tournament->sport);
+                    $team->save();
+
+                    $seasonTeam = SeasonTeamBuilder::build($this->season, $team, false, true);
+                    $seasonTeam->save();
+                }
+            }
+        } catch (\Throwable $e) {
+            info('Season statistic sync failed', ['season' => $this->season->id, 'exception' => $e->getMessage()]);
             return;
         }
-
-        $lastSync = $this->season->getLastSync();
-
-        if (!empty($lastSync) && $this->getLastSyncComparatorDate()->lessThan($lastSync)) {
-            info('Season last sync is less than a day', ['season' => $this->season->id]);
-            return;
-        }
-
-        $data = $this->getData($this->getUrl($this->season));
-        //$data = $this->getExampleData();
-
-        $data = $data['data'] ?? [];
-
-        if (empty($data)) {
-            info('Season statistic is empty', ['season' => $this->season->id]);
-            return;
-        }
-
-        $seasonStatistic = SeasonStatisticBuilder::build($this->season, $data);
-        $seasonStatistic->setLastSync(Carbon::now());
-        $seasonStatistic->save();
     }
 
     public function getUrl(Season $season): string
