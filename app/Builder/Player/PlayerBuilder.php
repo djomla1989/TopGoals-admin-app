@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class PlayerBuilder
 {
-    public static function build(array $data, Sport $sport): Player
+    public static function build(array $data, Sport $sport, bool $isManager = false): Player
     {
         /** @var Player $player */
         $player = Player::firstOrNew([
@@ -26,6 +26,7 @@ class PlayerBuilder
         $player->setHeight($data['height'] ?? null);
         $player->setWeight($data['weight'] ?? null);
         $player->setCountryCode($data['country']['alpha2'] ?? '');
+        $player->setIsManager($isManager);
 
         return $player;
     }

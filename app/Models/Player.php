@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $weight
  * @property \DateTime|null $date_of_birth
  * @property int|null $jersey_number
+ * @property bool $is_manager
  * @property bool $is_active
  * @property \DateTime|null $last_sync
  */
@@ -38,12 +39,14 @@ class Player extends BaseModel
         'weight',
         'date_of_birth',
         'jersey_number',
+        'is_manager',
         'is_active',
         'last_sync',
     ];
 
     protected $casts = [
         'date_of_birth' => 'datetime',
+        'is_manager' => 'boolean',
         'is_active' => 'boolean',
     ];
 
@@ -160,5 +163,12 @@ class Player extends BaseModel
     public function getPosition(): ?string
     {
         return $this->position;
+    }
+
+    public function setIsManager(bool $isManager): self
+    {
+        $this->is_manager = $isManager;
+
+        return $this;
     }
 }

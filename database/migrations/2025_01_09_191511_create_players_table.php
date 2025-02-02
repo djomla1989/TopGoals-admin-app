@@ -26,6 +26,7 @@ return new class extends Migration
             $table->smallInteger('weight')->nullable();
             $table->dateTime('date_of_birth')->nullable();
             $table->integer('jersey_number')->nullable();
+            $table->boolean('is_manager')->default(false);
             $table->boolean('is_active')->default(false);
             $table->timestamp('last_sync')->nullable();
             $table->timestamps();

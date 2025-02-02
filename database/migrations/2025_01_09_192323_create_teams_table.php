@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('is_national')->default(false);
             $table->char('gender')->default('M');
             $table->foreignId('manager_id')->nullable()->constrained('players');
+            $table->foreignId('venue_id')->nullable()->constrained('venues');
             $table->boolean('is_active')->default(false);
             $table->timestamp('last_sync')->nullable();
             $table->timestamps();
